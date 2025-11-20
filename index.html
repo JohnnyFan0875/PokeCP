@@ -36,18 +36,22 @@
         font-family: sans-serif;
         margin: 2em;
       }
+
       .dt-buttons {
         margin-bottom: 1em;
       }
+
       .switch {
         position: relative;
         display: inline-block;
         width: 52px;
         height: 28px;
       }
+
       .switch input {
         display: none;
       }
+
       .slider {
         position: absolute;
         cursor: pointer;
@@ -59,6 +63,7 @@
         bottom: 0;
         transition: 0.4s;
       }
+
       .slider:before {
         position: absolute;
         content: "";
@@ -70,9 +75,11 @@
         border-radius: 50%;
         transition: 0.4s;
       }
+
       input:checked + .slider {
         background-color: #4caf50;
       }
+
       input:checked + .slider:before {
         transform: translateX(24px);
       }
@@ -87,85 +94,125 @@
         background-color: white;
         z-index: 3;
       }
+
       #evo-table thead tr:nth-child(2) th {
         position: sticky;
         top: 32px; /* height of the first header row */
         background-color: white;
         z-index: 2;
       }
+
       #evo-table {
         width: 100%;
         table-layout: fixed;
       }
+
       #evo-table th:nth-child(1),
       #evo-table td:nth-child(1) {
         width: 20%;
       }
+
       #evo-table th:nth-child(2),
       #evo-table td:nth-child(2) {
         width: 5%;
       }
+
       #evo-table th:nth-child(3),
       #evo-table td:nth-child(3) {
         width: 5%;
       }
+
       #evo-table th:nth-child(4),
       #evo-table td:nth-child(4) {
         width: 4%;
       }
+
       #evo-table th:nth-child(5),
       #evo-table td:nth-child(5) {
         width: 4%;
       }
+
       #evo-table th:nth-child(6),
       #evo-table td:nth-child(6) {
         width: 4%;
       }
+
       #evo-table th:nth-child(7),
       #evo-table td:nth-child(7) {
         width: 45%;
       }
+
       #evo-table th:nth-child(8),
       #evo-table td:nth-child(8) {
         width: 7%;
       }
+
       #evo-table thead tr:nth-child(2) th input {
         width: 100%;
         box-sizing: border-box;
       }
+
       .top-controls {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 1em;
       }
+
       .dataTables_info {
         margin-top: 1em;
       }
+
       .dataTables_paginate {
         margin-top: 1em;
+      }
+      #clear-filters {
+        background-color: #636363;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        padding: 8px 20px;
+        font-size: 1em;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(30, 30, 60, 0.08);
+        transition: background 0.2s, transform 0.1s;
+      }
+
+      #clear-filters:hover,
+      #clear-filters:focus {
+        background-color: #12549b;
+        transform: translateY(-2px) scale(1.03);
+        color: #ffe082;
       }
     </style>
   </head>
   <body>
-    <h1 style="text-align: center">Table</h1>
+    <h1 style="text-align: center">Pokemon GO Evolution Table (CP520)</h1>
 
     <div
-      id="toggle-switch"
+      class="top-controls"
       style="
         display: flex;
         align-items: center;
         gap: 1em;
-        justify-content: center;
-        margin-bottom: 2em;
+        justify-content: flex-start;
+        margin-bottom: 1em;
       "
     >
-      <span>Non-collected</span>
-      <label class="switch">
-        <input type="checkbox" id="noncollected-toggle" checked />
-        <span class="slider"></span>
-      </label>
-      <span>All</span>
+      <button id="clear-filters">Clear Filters</button>
+      <div
+        id="toggle-switch"
+        style="display: flex; align-items: center; gap: 1em; margin-left: auto"
+      >
+        <span>Non-collected</span>
+        <label class="switch">
+          <input type="checkbox" id="noncollected-toggle" checked />
+          <span class="slider"></span>
+        </label>
+        <span>All</span>
+      </div>
+      <!-- DataTable length selector and search input will still render here via dom -->
     </div>
 
     <table id="evo-table" class="display" style="width: 100%">
@@ -219,7 +266,7 @@
               pageLength: 25,
               lengthMenu: [10, 25, 50, 100, 200],
               dom: '<"top-controls"lf>rtip',
-              fixedHeader: true,
+              fixedHeader: false,
               autoWidth: false,
             });
 
@@ -272,6 +319,14 @@
                 select: function (event, ui) {
                   table.column(colIndex).search(ui.item.value).draw();
                 },
+              });
+              $("#clear-filters").on("click", function () {
+                // Clear each input box in the header filter row
+                $("#evo-table thead tr:eq(1) th input").each(function () {
+                  $(this).val("");
+                });
+                // Clear the DataTable column searches and redraw table
+                table.columns().search("").draw();
               });
             });
           },
