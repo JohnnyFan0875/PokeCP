@@ -9,4 +9,4 @@ This program collects stats of all staged evolutionary Pokémon in Pokémon GO b
 - Outputs detailed stats useful for gameplay optimization and collection tracking.
 
 ## Github Page (CP520)
-[https://johnnyfan0875.github.io/pokemon-go-cp-calculator/](https://johnnyfan0875.github.io/pokemon-go-cp520-calculator/)
+[https://johnnyfan0875.github.io/pokemon-go-cp-calculator/](https://johnnyfan0875.github.io/pokemon-go-cp-calculator/)
