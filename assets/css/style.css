@@ -1,0 +1,161 @@
+body {
+  font-family: sans-serif;
+  margin: 2em;
+  background-color: #e2e2e2;
+}
+
+.dt-buttons {
+  margin-bottom: 1em;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 52px;
+  height: 28px;
+}
+.switch input {
+  display: none;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  background-color: #ccc;
+  border-radius: 28px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #4caf50;
+}
+input:checked + .slider:before {
+  transform: translateX(24px);
+}
+
+#toggle-buttons button {
+  margin-right: 1em;
+}
+
+#evo-table {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(60, 60, 60, 0.08);
+  padding: 1em;
+  width: 100%;
+  table-layout: fixed;
+}
+
+#evo-table thead tr:nth-child(1) th {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 3;
+}
+
+#evo-table thead tr:nth-child(2) th {
+  position: sticky;
+  top: 32px;
+  background-color: white;
+  z-index: 2;
+}
+
+#evo-table th:nth-child(1),
+#evo-table td:nth-child(1) {
+  width: 20%;
+}
+
+#evo-table th:nth-child(2),
+#evo-table td:nth-child(2) {
+  width: 5%;
+}
+
+#evo-table th:nth-child(3),
+#evo-table td:nth-child(3) {
+  width: 5%;
+}
+
+#evo-table th:nth-child(4),
+#evo-table td:nth-child(4) {
+  width: 4%;
+}
+
+#evo-table th:nth-child(5),
+#evo-table td:nth-child(5) {
+  width: 4%;
+}
+
+#evo-table th:nth-child(6),
+#evo-table td:nth-child(6) {
+  width: 4%;
+}
+
+#evo-table th:nth-child(7),
+#evo-table td:nth-child(7) {
+  width: 45%;
+}
+
+#evo-table th:nth-child(8),
+#evo-table td:nth-child(8) {
+  width: 7%;
+}
+
+#evo-table thead tr:nth-child(2) th input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.top-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1em;
+}
+
+.dataTables_info {
+  margin-top: 1em;
+}
+
+.dataTables_paginate {
+  margin-top: 1em;
+}
+
+#clear-filters {
+  background-color: #636363;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 20px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(30, 30, 60, 0.08);
+  transition: background 0.2s, transform 0.1s;
+}
+
+#clear-filters:hover,
+#clear-filters:focus {
+  background-color: #12549b;
+  transform: translateY(-2px) scale(1.03);
+  color: #ffe082;
+}
+
+#toggle-switch span {
+  font-weight: bold;
+}

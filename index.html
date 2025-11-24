@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Table</title>
+    <title>Pokemon GO Evolution Table (CP520)</title>
 
     <!-- DataTables CSS -->
     <link
@@ -13,15 +13,20 @@
       rel="stylesheet"
       href="https://cdn.datatables.net/fixedheader/3.3.2/css/fixedHeader.dataTables.min.css"
     />
-    <!-- jQuery UI CSS (autocomplete dropdown style) -->
+
+    <!-- jQuery UI CSS -->
     <link
       rel="stylesheet"
       href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css"
     />
 
-    <!-- jQuery MUST be loaded before jQuery UI -->
+    <!-- Your external CSS -->
+    <link rel="stylesheet" href="assets/css/style.css" />
+
+    <!-- jQuery must load before jQuery UI -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <!-- jQuery UI (autocomplete) -->
+
+    <!-- jQuery UI -->
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 
     <!-- DataTables JS -->
@@ -30,177 +35,10 @@
 
     <!-- PapaParse -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-
-    <style>
-      body {
-        font-family: sans-serif;
-        margin: 2em;
-        background-color: #e2e2e2;
-      }
-
-      .dt-buttons {
-        margin-bottom: 1em;
-      }
-
-      .switch {
-        position: relative;
-        display: inline-block;
-        width: 52px;
-        height: 28px;
-      }
-
-      .switch input {
-        display: none;
-      }
-
-      .slider {
-        position: absolute;
-        cursor: pointer;
-        background-color: #ccc;
-        border-radius: 28px;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        transition: 0.4s;
-      }
-
-      .slider:before {
-        position: absolute;
-        content: "";
-        height: 22px;
-        width: 22px;
-        left: 3px;
-        bottom: 3px;
-        background-color: white;
-        border-radius: 50%;
-        transition: 0.4s;
-      }
-
-      input:checked + .slider {
-        background-color: #4caf50;
-      }
-
-      input:checked + .slider:before {
-        transform: translateX(24px);
-      }
-
-      #toggle-buttons button {
-        margin-right: 1em;
-      }
-
-      #evo-table {
-        background: white;
-        border-radius: 10px;
-        box-shadow: 0 4px 14px rgba(60, 60, 60, 0.08);
-        padding: 1em;
-      }
-
-      #evo-table thead tr:nth-child(1) th {
-        position: sticky;
-        top: 0;
-        background-color: white;
-        z-index: 3;
-      }
-
-      #evo-table thead tr:nth-child(2) th {
-        position: sticky;
-        top: 32px; /* height of the first header row */
-        background-color: white;
-        z-index: 2;
-      }
-
-      #evo-table {
-        width: 100%;
-        table-layout: fixed;
-      }
-
-      #evo-table th:nth-child(1),
-      #evo-table td:nth-child(1) {
-        width: 20%;
-      }
-
-      #evo-table th:nth-child(2),
-      #evo-table td:nth-child(2) {
-        width: 5%;
-      }
-
-      #evo-table th:nth-child(3),
-      #evo-table td:nth-child(3) {
-        width: 5%;
-      }
-
-      #evo-table th:nth-child(4),
-      #evo-table td:nth-child(4) {
-        width: 4%;
-      }
-
-      #evo-table th:nth-child(5),
-      #evo-table td:nth-child(5) {
-        width: 4%;
-      }
-
-      #evo-table th:nth-child(6),
-      #evo-table td:nth-child(6) {
-        width: 4%;
-      }
-
-      #evo-table th:nth-child(7),
-      #evo-table td:nth-child(7) {
-        width: 45%;
-      }
-
-      #evo-table th:nth-child(8),
-      #evo-table td:nth-child(8) {
-        width: 7%;
-      }
-
-      #evo-table thead tr:nth-child(2) th input {
-        width: 100%;
-        box-sizing: border-box;
-      }
-
-      .top-controls {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1em;
-      }
-
-      .dataTables_info {
-        margin-top: 1em;
-      }
-
-      .dataTables_paginate {
-        margin-top: 1em;
-      }
-      #clear-filters {
-        background-color: #636363;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        padding: 8px 20px;
-        font-size: 1em;
-        font-weight: 600;
-        cursor: pointer;
-        box-shadow: 0 2px 5px rgba(30, 30, 60, 0.08);
-        transition: background 0.2s, transform 0.1s;
-      }
-
-      #clear-filters:hover,
-      #clear-filters:focus {
-        background-color: #12549b;
-        transform: translateY(-2px) scale(1.03);
-        color: #ffe082;
-      }
-
-      #toggle-switch span {
-        font-weight: bold;
-      }
-    </style>
   </head>
+
   <body>
-    <h1 style="text-align: center">Pokemon GO Evolution Table (CP520)</h1>
+    <h1 style="text-align: center">Table</h1>
 
     <div
       class="top-controls"
@@ -213,6 +51,7 @@
       "
     >
       <button id="clear-filters">Clear Filters</button>
+
       <div
         id="toggle-switch"
         style="display: flex; align-items: center; gap: 1em; margin-left: auto"
@@ -224,7 +63,6 @@
         </label>
         <span>All</span>
       </div>
-      <!-- DataTable length selector and search input will still render here via dom -->
     </div>
 
     <table id="evo-table" class="display" style="width: 100%">
@@ -252,98 +90,7 @@
       </thead>
     </table>
 
-    <script>
-      // Load CSV, initialize DataTable, and set up the toggle buttons
-      $(document).ready(function () {
-        Papa.parse("./output/cp520/cp520_all_evolutions.csv", {
-          download: true,
-          header: true,
-          complete: function (results) {
-            let data = results.data.filter((row) => row.Pokemon); // remove header/footer blanks
-
-            let table = $("#evo-table").DataTable({
-              data: data,
-              deferRender: true,
-              columns: [
-                { data: "Pokemon" },
-                { data: "CP" },
-                { data: "Level" },
-                { data: "IV_Attack" },
-                { data: "IV_Defense" },
-                { data: "IV_HP" },
-                { data: "Evolution(CP)" },
-                { data: "Collected" },
-              ],
-              order: [[0, "asc"]],
-              pageLength: 25,
-              lengthMenu: [10, 25, 50, 100, 200],
-              dom: '<"top-controls"lf>rtip',
-              fixedHeader: false,
-              autoWidth: false,
-            });
-
-            // Live per-column search on input change or keyup
-            $("#evo-table thead tr:eq(1) th").each(function (i) {
-              $("input", this).on("keyup change", function () {
-                if (table.column(i).search() !== this.value) {
-                  table.column(i).search(this.value).draw();
-                }
-              });
-            });
-
-            // Toggle showing collected vs non-collected
-            $("#noncollected-toggle").on("change", function () {
-              if (this.checked) {
-                // Switch ON (green): show NON-COLLECTED only
-                table.column(7).search("").draw();
-              } else {
-                // Switch OFF (grey): show ALL collected (marked "No")
-                table.column(7).search("No").draw();
-              }
-            });
-
-            // Build autocomplete for each column filter
-            table.columns().every(function (colIndex) {
-              if (colIndex === 6) {
-                return; // skip this column
-              }
-              let uniqueValues = [
-                ...new Set(
-                  table
-                    .column(colIndex)
-                    .data()
-                    .toArray()
-                    .filter((v) => v !== null && v !== "")
-                ),
-              ];
-
-              $(
-                "#evo-table thead tr:eq(1) th:eq(" + colIndex + ") input"
-              ).autocomplete({
-                source: function (request, response) {
-                  const term = request.term.toLowerCase();
-                  response(
-                    uniqueValues.filter((v) => v.toLowerCase().includes(term))
-                  );
-                },
-                minLength: 1,
-                delay: 0,
-                select: function (event, ui) {
-                  table.column(colIndex).search(ui.item.value).draw();
-                },
-              });
-              $("#clear-filters").on("click", function () {
-                // Clear each input box in the header filter row
-                $("#evo-table thead tr:eq(1) th input").each(function () {
-                  $(this).val("");
-                });
-                // Clear the DataTable column searches and redraw table
-                table.columns().search("").draw();
-              });
-            });
-          },
-        });
-      });
-    </script>
+    <!-- Your external JavaScript -->
+    <script src="assets/js/main.js"></script>
   </body>
 </html>
