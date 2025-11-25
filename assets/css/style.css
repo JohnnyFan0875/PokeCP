@@ -97,7 +97,6 @@ input:checked + .slider:before {
   box-shadow: 0 4px 14px rgba(60, 60, 60, 0.08);
   padding: 1em;
   width: 100%;
-  /*table-layout: fixed;*/
 }
 
 #evo-table thead tr:nth-child(1) th {
@@ -113,48 +112,6 @@ input:checked + .slider:before {
   background-color: white;
   z-index: 2;
 }
-
-/*
-#evo-table th:nth-child(1),
-#evo-table td:nth-child(1) {
-  width: 20%;
-}
-
-#evo-table th:nth-child(2),
-#evo-table td:nth-child(2) {
-  width: 5%;
-}
-
-#evo-table th:nth-child(3),
-#evo-table td:nth-child(3) {
-  width: 5%;
-}
-
-#evo-table th:nth-child(4),
-#evo-table td:nth-child(4) {
-  width: 4%;
-}
-
-#evo-table th:nth-child(5),
-#evo-table td:nth-child(5) {
-  width: 4%;
-}
-
-#evo-table th:nth-child(6),
-#evo-table td:nth-child(6) {
-  width: 4%;
-}
-
-#evo-table th:nth-child(7),
-#evo-table td:nth-child(7) {
-  width: 45%;
-}
-
-#evo-table th:nth-child(8),
-#evo-table td:nth-child(8) {
-  width: 7%;
-}
-*/
 
 #evo-table thead tr:nth-child(2) th input {
   width: 100%;
