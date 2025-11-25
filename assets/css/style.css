@@ -7,6 +7,7 @@ body {
 .table-responsive {
   width: 100%;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Adjust font sizes and padding on small screens */
@@ -17,16 +18,22 @@ body {
   }
   #evo-table {
     font-size: 12px;
+    table-layout: auto;
   }
   /* Adjust filter inputs and dropdown widths */
   #evo-table thead tr:nth-child(2) th input,
   #evo-table thead tr:nth-child(2) th select {
     font-size: 12px;
+    min-width: 50px;
   }
   /* Make table headers and cells more compact */
   #evo-table th,
   #evo-table td {
     padding: 4px 6px;
+    font-size: 12px;
+    white-space: normal;
+    word-break: break-word;
+    min-width: 70px;
   }
   /* Make top controls stack vertically */
   .top-controls {
