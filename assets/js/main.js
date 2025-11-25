@@ -8,7 +8,6 @@ $(document).ready(function () {
       let table = $("#evo-table").DataTable({
         data: data,
         deferRender: true,
-        responsive: true,
         columns: [
           { data: "Pokemon" },
           { data: "CP" },
