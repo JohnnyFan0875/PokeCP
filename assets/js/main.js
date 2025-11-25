@@ -88,6 +88,18 @@ $(document).ready(function () {
         }
       });
 
+      $("#collected").on("change", function () {
+        let val = this.value;
+        if (val === "") {
+          table.column(6).search("").draw();
+        } else {
+          table
+            .column(6)
+            .search("^" + val + "$", true, false)
+            .draw();
+        }
+      });
+
       // Toggle showing collected vs non-collected
       $("#noncollected-toggle").on("change", function () {
         if (this.checked) {
@@ -134,6 +146,14 @@ $(document).ready(function () {
             table.column(colIndex).search(ui.item.value).draw();
           },
         });
+      });
+
+      // FIX: Allow Ctrl+A to select all in search boxes
+      $(document).on("keydown", "input", function (e) {
+        if (e.ctrlKey && e.key === "a") {
+          e.preventDefault();
+          this.select();
+        }
       });
 
       // Clear filter button clears inputs and dropdowns
