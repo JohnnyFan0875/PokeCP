@@ -42,6 +42,36 @@ body {
   }
 }
 
+#evo-table th:nth-child(1),
+#evo-table td:nth-child(1) {
+  width: 250px;
+}
+
+#evo-table th:nth-child(2),
+#evo-table td:nth-child(2) {
+  width: 60px;
+}
+
+#evo-table th:nth-child(3),
+#evo-table td:nth-child(3) {
+  width: 60px;
+}
+
+#evo-table th:nth-child(4),
+#evo-table td:nth-child(4) {
+  width: 60px;
+}
+
+#evo-table th:nth-child(5),
+#evo-table td:nth-child(5) {
+  width: 60px;
+}
+
+#evo-table th:nth-child(7),
+#evo-table td:nth-child(7) {
+  width: 90px;
+}
+
 .dt-buttons {
   margin-bottom: 1em;
 }
