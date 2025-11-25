@@ -17,7 +17,6 @@ body {
     font-size: 14px;
   }
   #evo-table {
-    font-size: 12px;
     table-layout: auto !important;
     width: 100%;
   }
@@ -30,6 +29,7 @@ body {
   /* Make table headers and cells more compact */
   #evo-table th,
   #evo-table td {
+    width: auto !important;
     white-space: normal;
     word-break: break-word;
     min-width: 70px;
@@ -97,7 +97,7 @@ input:checked + .slider:before {
   box-shadow: 0 4px 14px rgba(60, 60, 60, 0.08);
   padding: 1em;
   width: 100%;
-  table-layout: fixed;
+  /*table-layout: fixed;*/
 }
 
 #evo-table thead tr:nth-child(1) th {
@@ -114,6 +114,7 @@ input:checked + .slider:before {
   z-index: 2;
 }
 
+/*
 #evo-table th:nth-child(1),
 #evo-table td:nth-child(1) {
   width: 20%;
@@ -153,6 +154,7 @@ input:checked + .slider:before {
 #evo-table td:nth-child(8) {
   width: 7%;
 }
+*/
 
 #evo-table thead tr:nth-child(2) th input {
   width: 100%;
