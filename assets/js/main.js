@@ -10,7 +10,6 @@ $(document).ready(function () {
         deferRender: true,
         columns: [
           { data: "Pokemon" },
-          { data: "CP" },
           { data: "Level" },
           { data: "IV_Attack" },
           { data: "IV_Defense" },
@@ -28,7 +27,7 @@ $(document).ready(function () {
 
       // Live per-column search on input change or keyup for all but Attack(3), Defense(4), HP(5)
       $("#evo-table thead tr:eq(1) th").each(function (i) {
-        if (i === 3 || i === 4 || i === 5) {
+        if (i === 2 || i === 3 || i === 4) {
           // Skip input search binding for Attack, Defense, HP
           return;
         }
@@ -43,6 +42,18 @@ $(document).ready(function () {
       $("#attack-filter").on("change", function () {
         let val = this.value;
         if (val === "") {
+          table.column(2).search("").draw();
+        } else {
+          table
+            .column(2)
+            .search("^" + val + "$", true, false)
+            .draw();
+        }
+      });
+
+      $("#defense-filter").on("change", function () {
+        let val = this.value;
+        if (val === "") {
           table.column(3).search("").draw();
         } else {
           table
@@ -52,7 +63,7 @@ $(document).ready(function () {
         }
       });
 
-      $("#defense-filter").on("change", function () {
+      $("#hp-filter").on("change", function () {
         let val = this.value;
         if (val === "") {
           table.column(4).search("").draw();
@@ -64,36 +75,24 @@ $(document).ready(function () {
         }
       });
 
-      $("#hp-filter").on("change", function () {
-        let val = this.value;
-        if (val === "") {
-          table.column(5).search("").draw();
-        } else {
-          table
-            .column(5)
-            .search("^" + val + "$", true, false)
-            .draw();
-        }
-      });
-
       // Toggle showing collected vs non-collected
       $("#noncollected-toggle").on("change", function () {
         if (this.checked) {
           // Switch ON (green): show NON-COLLECTED only
-          table.column(7).search("").draw();
+          table.column(6).search("").draw();
         } else {
           // Switch OFF: show ALL collected (marked "No")
-          table.column(7).search("No").draw();
+          table.column(6).search("No").draw();
         }
       });
 
-      // Build autocomplete for inputs except Attack(3), Defense(4), HP(5), Evolution(CP)(6)
+      // Build autocomplete for inputs except Attack(2), Defense(3), HP(4), Evolution(CP)(5)
       table.columns().every(function (colIndex) {
         if (
+          colIndex === 2 ||
           colIndex === 3 ||
           colIndex === 4 ||
-          colIndex === 5 ||
-          colIndex === 6
+          colIndex === 5
         )
           return;
 
@@ -138,10 +137,10 @@ $(document).ready(function () {
         // Reapply collected/non-collected filter based on toggle status
         if ($("#noncollected-toggle").prop("checked")) {
           // Non-collected mode ON: show only non-collected rows (column 7 blank)
-          table.column(7).search("").draw();
+          table.column(6).search("").draw();
         } else {
           // Non-collected mode OFF: show all collected rows (search "No")
-          table.column(7).search("No").draw();
+          table.column(6).search("No").draw();
         }
       });
     },
