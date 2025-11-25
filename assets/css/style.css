@@ -40,10 +40,9 @@ body {
     align-items: flex-start;
     justify-items: flex-start;
     gap: 10px;
-
+  }
   #toggle-switch {
     margin-left: 0;
-  }
   }
 }
 
