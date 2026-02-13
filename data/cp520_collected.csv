@@ -132,7 +132,7 @@ Kingler,YES
 Voltorb,YES
 Voltorb Hisuian Form,YES
 Electrode,YES
-Electrode Hisuian Form,NO
+Electrode Hisuian Form,YES
 Exeggcute,YES
 Exeggutor,YES
 Exeggutor Alolan Form,NO
@@ -725,7 +725,7 @@ Accelgor,YES
 Stunfisk,YES
 Stunfisk Galarian Form,YES
 Mienfoo,YES
-Mienshao,NO
+Mienshao,YES
 Druddigon,NO
 Golett,YES
 Golurk,NO
@@ -1090,4 +1090,22 @@ Sinistcha,NO
 Hydrapple,NO
 Tarountula,NO
 Spidops,YES
-
+Victreebel Mega Victreebel,NO
+Dragonite Mega Dragonite,NO
+Malamar Mega Malamar,NO
+Mimikyu,NO
+Zeraora,NO
+Rolycoly,YES
+Carkol,NO
+Coalossal,NO
+Clobbopus,NO
+Grapploct,NO
+Nacli,YES
+Naclstack,NO
+Garganacl,NO
+Wattrel,YES
+Kilowattrel,NO
+Klawf,NO
+Glimmet,NO
+Glimmora,NO
+Flamigo,NO
