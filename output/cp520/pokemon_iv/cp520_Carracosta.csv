@@ -1,4 +1,4 @@
-Name,Level,Attack_IV,Defense_IV,HP_IV,CP
+Name,Level,IV_Attack,IV_Defense,IV_HP,CP
 Carracosta,LV8,0,0,9,520
 Carracosta,LV8,0,1,8,520
 Carracosta,LV8,0,2,7,520

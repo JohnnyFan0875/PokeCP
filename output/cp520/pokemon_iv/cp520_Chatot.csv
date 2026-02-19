@@ -1,4 +1,4 @@
-Name,Level,Attack_IV,Defense_IV,HP_IV,CP
+Name,Level,IV_Attack,IV_Defense,IV_HP,CP
 Chatot,LV12,0,0,11,520
 Chatot,LV12,0,1,9,520
 Chatot,LV12,0,5,1,520

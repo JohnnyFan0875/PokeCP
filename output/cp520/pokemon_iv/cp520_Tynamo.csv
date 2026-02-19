@@ -1,4 +1,4 @@
-Name,Level,Attack_IV,Defense_IV,HP_IV,CP
+Name,Level,IV_Attack,IV_Defense,IV_HP,CP
 Tynamo,LV28.5,0,0,11,520
 Tynamo,LV28,0,0,15,520
 Tynamo,LV29,0,1,5,520

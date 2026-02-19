@@ -1,4 +1,4 @@
-Name,Level,Attack_IV,Defense_IV,HP_IV,CP
+Name,Level,IV_Attack,IV_Defense,IV_HP,CP
 Slakoth,LV23.5,0,0,0,520
 Slakoth,LV22.5,0,0,14,520
 Slakoth,LV23,0,1,5,520

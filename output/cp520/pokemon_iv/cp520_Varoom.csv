@@ -1,4 +1,4 @@
-Name,Level,Attack_IV,Defense_IV,HP_IV,CP
+Name,Level,IV_Attack,IV_Defense,IV_HP,CP
 Varoom,LV19.5,0,0,10,520
 Varoom,LV20,0,1,2,520
 Varoom,LV19.5,0,1,9,520

@@ -1,4 +1,4 @@
-Name,Level,Attack_IV,Defense_IV,HP_IV,CP
+Name,Level,IV_Attack,IV_Defense,IV_HP,CP
 Toucannon,LV8,0,0,0,520
 Toucannon,LV7.5,0,10,14,520
 Toucannon,LV7.5,0,11,13,520

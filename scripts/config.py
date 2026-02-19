@@ -29,7 +29,7 @@ COLLECTED_CSV = os.path.join(DATA_DIR, 'cp{cp}_collected.csv')
 # ─── Output files ──────────────────────────────────────────────────────────────
 
 # Root output directory per CP value
-OUTPUT_CP_DIR = os.path.join(os.path.dirname(__file__), 'output', 'cp{cp}')
+OUTPUT_CP_DIR = os.path.join(os.path.dirname(__file__), '..', 'output', 'cp{cp}')
 
 # Sub-folder holding per-Pokémon IV files
 OUTPUT_CP_IV_FOLDER = os.path.join(OUTPUT_CP_DIR, 'pokemon_iv')

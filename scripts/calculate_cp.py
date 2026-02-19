@@ -2,11 +2,10 @@
 calculate_cp.py
 
 Calculates evolution CP tables for Pokémon GO.
-Supports --shadow flag to also compute purified (+2 IV each) results.
+Always generates both normal and shadow evolution CSVs.
 
 Usage:
     python calculate_cp.py --cp 520
-    python calculate_cp.py --cp 520 --shadow
 """
 import os
 import sys
@@ -19,17 +18,16 @@ import pandas as pd
 
 from config import (
     BASESTAT_CSV, EVOLUTION_CSV, MULTIPLIER_CSV,
-    COLLECTED_CSV, OUTPUT_CP_IV_FOLDER, OUTPUT_ALL_FILE,
+    COLLECTED_CSV, OUTPUT_CP_IV_FOLDER,
+    OUTPUT_ALL_FILE,
 )
 
 
 # ─── CLI ──────────────────────────────────────────────────────────────────────
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Pokémon GO CP Calculator")
+    parser = argparse.ArgumentParser(description="Pokemon GO CP Calculator")
     parser.add_argument('--cp', type=int, required=True, help='Target CP value')
-    parser.add_argument('--shadow', action='store_true',
-                        help='Also output Shadow→Purified (+2 IV) eligible rows')
     return parser.parse_args()
 
 
@@ -45,18 +43,13 @@ def load_base_stats() -> pd.DataFrame:
 
 
 def load_multipliers() -> dict:
-    """Returns {level_str: float} e.g. {'1': 0.094, '1.5': 0.1351374, ...}"""
     with open(MULTIPLIER_CSV, 'r', encoding='utf-8') as f:
         reader = csv.reader(f)
         return {row[0]: float(row[1]) for row in reader if len(row) >= 2}
 
 
 def load_evolution_chains() -> dict:
-    """
-    Returns a dict: {pokemon_name: [[evo_chain_list], ...]}
-    Each Pokémon maps to one or more evolution paths it belongs to.
-    """
-    chains: dict[str, list] = {}
+    chains = {}
     with open(EVOLUTION_CSV, 'r', encoding='utf-8') as f:
         for line in f:
             chain = [x.strip() for x in line.strip().split(',') if x.strip()]
@@ -70,19 +63,31 @@ def load_evolution_chains() -> dict:
 
 
 def load_collected(cp_val: int) -> dict:
-    """Returns {pokemon_name: 'YES'|'NO'}"""
+    """
+    Returns {pokemon_name: {Collected, Collected_Shadow, Collected_Purified}}
+    Backwards compatible: missing columns default to 'NO'.
+    """
     path = COLLECTED_CSV.format(cp=cp_val)
     if not os.path.exists(path):
         return {}
+    result = {}
     with open(path, 'r', encoding='utf-8') as f:
-        reader = csv.reader(f)
-        return {row[0].strip(): row[1].strip().upper() for row in reader if len(row) >= 2}
+        reader = csv.DictReader(f)
+        for row in reader:
+            name = row.get('Pokemon', '').strip()
+            if not name:
+                continue
+            result[name] = {
+                'Collected':          row.get('Collected', 'NO').strip().upper(),
+                'Collected_Shadow':   row.get('Collected_Shadow', 'NO').strip().upper(),
+                'Collected_Purified': row.get('Collected_Purified', 'NO').strip().upper(),
+            }
+    return result
 
 
-# ─── Data consistency check ───────────────────────────────────────────────────
+# ─── Consistency check ────────────────────────────────────────────────────────
 
 def check_consistency(df_stat: pd.DataFrame, cp_val: int) -> dict:
-    """Warns about mismatches between base stats, evolution, and collected CSVs."""
     print("[INFO] Checking data consistency...")
     chains = load_evolution_chains()
     collected = load_collected(cp_val)
@@ -104,7 +109,6 @@ def check_consistency(df_stat: pd.DataFrame, cp_val: int) -> dict:
         print("[WARN] Data inconsistencies found:")
         for msg in issues:
             print(msg)
-        # Don't exit — warn only, let user decide
     else:
         print("[INFO] Data consistency OK.")
 
@@ -113,31 +117,25 @@ def check_consistency(df_stat: pd.DataFrame, cp_val: int) -> dict:
 
 # ─── CP formula ───────────────────────────────────────────────────────────────
 
-def calc_cp(base_atk: int, base_def: int, base_hp: int,
-            iv_atk: int, iv_def: int, iv_hp: int,
-            cpm: float) -> int:
+def calc_cp(base_atk, base_def, base_hp, iv_atk, iv_def, iv_hp, cpm):
     cp = (base_atk + iv_atk) * math.sqrt(base_def + iv_def) * math.sqrt(base_hp + iv_hp) * cpm ** 2 / 10
     return int(cp)
 
 
-def purified_ivs(iv_atk: int, iv_def: int, iv_hp: int) -> tuple:
-    """Shadow → Purified: each IV +2, capped at 15."""
+def purified_ivs(iv_atk, iv_def, iv_hp):
     return min(iv_atk + 2, 15), min(iv_def + 2, 15), min(iv_hp + 2, 15)
 
 
-# ─── Per-Pokémon CP/IV file ───────────────────────────────────────────────────
+# ─── Per-Pokemon CP/IV file ───────────────────────────────────────────────────
 
-def create_cp_iv_file(name: str, base_atk: int, base_def: int, base_hp: int,
-                      multipliers: dict, cp_val: int, output_folder: str):
-    """Creates a CSV of all (level, IV combo) that produce exactly cp_val for this Pokémon."""
+def create_cp_iv_file(name, base_atk, base_def, base_hp, multipliers, cp_val, output_folder):
     path = os.path.join(output_folder, f"cp{cp_val}_{name}.csv")
     if os.path.exists(path):
-        return  # Already computed
+        return
 
     rows = []
-    iv_range = range(16)
     for iv_a, iv_d, iv_h, (level, cpm) in itertools.product(
-        iv_range, iv_range, iv_range, multipliers.items()
+        range(16), range(16), range(16), multipliers.items()
     ):
         if calc_cp(base_atk, base_def, base_hp, iv_a, iv_d, iv_h, float(cpm)) == cp_val:
             rows.append([name, f"LV{level}", iv_a, iv_d, iv_h, cp_val])
@@ -150,7 +148,7 @@ def create_cp_iv_file(name: str, base_atk: int, base_def: int, base_hp: int,
     print(f"[INFO] Created: {path} ({len(rows)} rows)")
 
 
-def create_all_cp_iv_files(df_stat: pd.DataFrame, multipliers: dict, cp_val: int):
+def create_all_cp_iv_files(df_stat, multipliers, cp_val):
     folder = OUTPUT_CP_IV_FOLDER.format(cp=cp_val)
     os.makedirs(folder, exist_ok=True)
     for _, row in df_stat.iterrows():
@@ -160,31 +158,26 @@ def create_all_cp_iv_files(df_stat: pd.DataFrame, multipliers: dict, cp_val: int
         )
 
 
-# ─── Master evolution CSV ─────────────────────────────────────────────────────
+# ─── Evolution CSV ─────────────────────────────────────────────────────
 
-def create_evolution_csv(df_stat: pd.DataFrame, evo_chains: dict,
-                         multipliers: dict, cp_val: int, include_shadow: bool):
+def create_evolution_csv(df_stat, evo_chains, multipliers, cp_val):
     """
-    Builds the master CSV combining all Pokémon IV data with their evolution chains.
-    If include_shadow=True, adds a Shadow_Purified_Eligible column.
+    cp{N}_all_evolutions.csv
+    Columns: Pokemon, CP, Level, IV_Attack, IV_Defense, IV_HP, Shadow_ATK_IV, Shadow_DEF_IV, Shadow_HP_IV, Evolution(CP), Collected, Collected_Shadow, Collected_Purified
     """
     collected = load_collected(cp_val)
     stat_lookup = {row['Pokemon']: row for _, row in df_stat.iterrows()}
     iv_folder = OUTPUT_CP_IV_FOLDER.format(cp=cp_val)
     output_path = OUTPUT_ALL_FILE.format(cp=cp_val)
 
-    print(f"[INFO] Building evolution CSV → {output_path}")
+    print(f"[INFO] Building normal evolution CSV -> {output_path}")
 
-    headers = ['Pokemon', 'CP', 'Level', 'IV_Attack', 'IV_Defense', 'IV_HP',
-               'Evolution(CP)', 'Collected']
-    if include_shadow:
-        headers.append('Shadow_Purified_Eligible')
-
-    seen_rows = set()  # Deduplicate (pokemon, level, iv_a, iv_d, iv_h, evo_chain)
+    seen_rows = set()
 
     with open(output_path, 'w', encoding='utf-8', newline='') as f_out:
         writer = csv.writer(f_out)
-        writer.writerow(headers)
+        writer.writerow(['Pokemon', 'CP', 'Level', 'IV_Attack', 'IV_Defense', 'IV_HP', 'Shadow_ATK_IV', 'Shadow_DEF_IV', 'Shadow_HP_IV',
+                         'Evolution(CP)', 'Collected', 'Collected_Shadow', 'Collected_Purified'])
 
         for poke_name in df_stat['Pokemon']:
             iv_file = os.path.join(iv_folder, f"cp{cp_val}_{poke_name}.csv")
@@ -195,18 +188,23 @@ def create_evolution_csv(df_stat: pd.DataFrame, evo_chains: dict,
                 iv_rows = list(csv.DictReader(f))
 
             chains = evo_chains.get(poke_name, [[poke_name]])
+            coll_val = collected.get(poke_name, {}).get('Collected', 'NO')
+            coll_s_val = collected.get(poke_name, {}).get('Collected_Shadow', 'NO')
+            coll_p_val = collected.get(poke_name, {}).get('Collected_Purified', 'NO')
 
             for iv_row in iv_rows:
-                level    = iv_row['Level']
-                iv_a     = int(iv_row['IV_Attack'])
-                iv_d     = int(iv_row['IV_Defense'])
-                iv_h     = int(iv_row['IV_HP'])
-                cp_int   = int(iv_row['CP'])
-                cpm      = float(multipliers[level.replace('LV', '')])
-                coll_val = collected.get(poke_name, 'NO').upper()
-
-                # Shadow eligible: shadow IVs (each -2) must be >= 0
-                shadow_eligible = 'YES' if (iv_a >= 2 and iv_d >= 2 and iv_h >= 2) else 'NO'
+                level  = iv_row['Level']
+                iv_a   = int(iv_row['IV_Attack'])
+                iv_d   = int(iv_row['IV_Defense'])
+                iv_h   = int(iv_row['IV_HP'])
+                if iv_a < 2 or iv_d < 2 or iv_h < 2 or float(level.replace('LV', '')) < 25:
+                    s_atk = s_def = s_hp = ''
+                else:
+                    s_atk = iv_a - 2
+                    s_def = iv_d - 2
+                    s_hp  = iv_h - 2
+                cp_int = int(iv_row['CP'])
+                cpm    = float(multipliers[level.replace('LV', '')])
 
                 for chain in chains:
                     evo_parts = []
@@ -219,19 +217,15 @@ def create_evolution_csv(df_stat: pd.DataFrame, evo_chains: dict,
                         evo_parts.append(f"{evo_name}({evo_cp})")
 
                     evo_chain_str = '-'.join(evo_parts)
-
-                    dedup_key = (poke_name, level, iv_a, iv_d, iv_h, evo_chain_str)
+                    dedup_key = (poke_name, level, iv_a, iv_d, iv_h, s_atk, s_def, s_hp, evo_chain_str)
                     if dedup_key in seen_rows:
                         continue
                     seen_rows.add(dedup_key)
 
-                    row_data = [poke_name, cp_int, level, iv_a, iv_d, iv_h,
-                                evo_chain_str, coll_val]
-                    if include_shadow:
-                        row_data.append(shadow_eligible)
-                    writer.writerow(row_data)
+                    writer.writerow([poke_name, cp_int, level, iv_a, iv_d, iv_h, s_atk, s_def, s_hp,
+                                     evo_chain_str, coll_val, coll_s_val, coll_p_val])
 
-    print(f"[INFO] Evolution CSV complete: {output_path}")
+    print(f"[INFO] Normal evolution CSV complete: {output_path}")
 
 
 # ─── Entry point ──────────────────────────────────────────────────────────────
@@ -239,11 +233,11 @@ def create_evolution_csv(df_stat: pd.DataFrame, evo_chains: dict,
 if __name__ == '__main__':
     args = parse_args()
 
-    df_stats = load_base_stats()
+    df_stats   = load_base_stats()
     evo_chains = check_consistency(df_stats, args.cp)
     multipliers = load_multipliers()
 
     create_all_cp_iv_files(df_stats, multipliers, args.cp)
-    create_evolution_csv(df_stats, evo_chains, multipliers, args.cp, include_shadow=args.shadow)
+    create_evolution_csv(df_stats, evo_chains, multipliers, args.cp)
 
     print(f"\n[DONE] All files generated for CP={args.cp}.")

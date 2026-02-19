@@ -1,4 +1,4 @@
-Name,Level,Attack_IV,Defense_IV,HP_IV,CP
+Name,Level,IV_Attack,IV_Defense,IV_HP,CP
 Lickitung,LV16,0,0,1,520
 Lickitung,LV15.5,0,0,15,520
 Lickitung,LV15.5,0,1,13,520

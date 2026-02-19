@@ -1,4 +1,4 @@
-Name,Level,Attack_IV,Defense_IV,HP_IV,CP
+Name,Level,IV_Attack,IV_Defense,IV_HP,CP
 Alakazam,LV7,0,2,1,520
 Alakazam,LV7,0,3,0,520
 Alakazam,LV6.5,0,14,15,520

@@ -1,4 +1,4 @@
-Name,Level,Attack_IV,Defense_IV,HP_IV,CP
+Name,Level,IV_Attack,IV_Defense,IV_HP,CP
 Lairon,LV10.5,0,0,1,520
 Lairon,LV10.5,0,1,0,520
 Lairon,LV10,0,2,15,520

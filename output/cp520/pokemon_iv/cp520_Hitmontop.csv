@@ -1,4 +1,4 @@
-Name,Level,Attack_IV,Defense_IV,HP_IV,CP
+Name,Level,IV_Attack,IV_Defense,IV_HP,CP
 Hitmontop,LV10,0,0,0,520
 Hitmontop,LV9.5,0,1,15,520
 Hitmontop,LV9.5,0,3,14,520

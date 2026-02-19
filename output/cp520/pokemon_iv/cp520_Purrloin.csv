@@ -1,4 +1,4 @@
-Name,Level,Attack_IV,Defense_IV,HP_IV,CP
+Name,Level,IV_Attack,IV_Defense,IV_HP,CP
 Purrloin,LV30,0,0,14,520
 Purrloin,LV30.5,0,1,10,520
 Purrloin,LV30,0,1,12,520

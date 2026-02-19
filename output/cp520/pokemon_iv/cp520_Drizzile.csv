@@ -1,4 +1,4 @@
-Name,Level,Attack_IV,Defense_IV,HP_IV,CP
+Name,Level,IV_Attack,IV_Defense,IV_HP,CP
 Drizzile,LV11.5,0,1,0,520
 Drizzile,LV11,0,1,15,520
 Drizzile,LV11,0,3,12,520

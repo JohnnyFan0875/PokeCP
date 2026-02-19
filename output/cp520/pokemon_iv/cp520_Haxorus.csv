@@ -1,4 +1,4 @@
-Name,Level,Attack_IV,Defense_IV,HP_IV,CP
+Name,Level,IV_Attack,IV_Defense,IV_HP,CP
 Haxorus,LV6,0,0,1,520
 Haxorus,LV6,0,1,0,520
 Haxorus,LV5.5,5,15,15,520

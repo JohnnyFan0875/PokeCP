@@ -1,4 +1,4 @@
-Name,Level,Attack_IV,Defense_IV,HP_IV,CP
+Name,Level,IV_Attack,IV_Defense,IV_HP,CP
 Mawile,LV13.5,0,0,1,520
 Mawile,LV13.5,0,1,0,520
 Mawile,LV12.5,0,8,15,520

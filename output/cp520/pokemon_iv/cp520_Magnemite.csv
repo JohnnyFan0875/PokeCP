@@ -1,4 +1,4 @@
-Name,Level,Attack_IV,Defense_IV,HP_IV,CP
+Name,Level,IV_Attack,IV_Defense,IV_HP,CP
 Magnemite,LV16.5,0,0,2,520
 Magnemite,LV16,0,0,8,520
 Magnemite,LV16.5,0,1,1,520

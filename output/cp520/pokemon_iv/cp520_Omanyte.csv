@@ -1,4 +1,4 @@
-Name,Level,Attack_IV,Defense_IV,HP_IV,CP
+Name,Level,IV_Attack,IV_Defense,IV_HP,CP
 Omanyte,LV14,0,0,7,520
 Omanyte,LV13.5,0,1,15,520
 Omanyte,LV14,0,3,5,520

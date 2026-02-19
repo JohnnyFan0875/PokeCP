@@ -1,4 +1,4 @@
-Name,Level,Attack_IV,Defense_IV,HP_IV,CP
+Name,Level,IV_Attack,IV_Defense,IV_HP,CP
 Ledian,LV16,0,1,15,520
 Ledian,LV16.5,0,2,5,520
 Ledian,LV16.5,0,3,4,520

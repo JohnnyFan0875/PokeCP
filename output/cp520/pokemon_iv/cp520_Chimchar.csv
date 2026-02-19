@@ -1,4 +1,4 @@
-Name,Level,Attack_IV,Defense_IV,HP_IV,CP
+Name,Level,IV_Attack,IV_Defense,IV_HP,CP
 Chimchar,LV24.5,0,0,2,520
 Chimchar,LV24,0,1,6,520
 Chimchar,LV23.5,0,2,10,520

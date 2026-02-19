@@ -1,4 +1,4 @@
-Name,Level,Attack_IV,Defense_IV,HP_IV,CP
+Name,Level,IV_Attack,IV_Defense,IV_HP,CP
 Crabominable,LV7,0,8,15,520
 Crabominable,LV7,0,9,13,520
 Crabominable,LV7,0,10,12,520

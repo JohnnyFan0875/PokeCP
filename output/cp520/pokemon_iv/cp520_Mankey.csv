@@ -1,4 +1,4 @@
-Name,Level,Attack_IV,Defense_IV,HP_IV,CP
+Name,Level,IV_Attack,IV_Defense,IV_HP,CP
 Mankey,LV19,0,0,11,520
 Mankey,LV19.5,0,1,3,520
 Mankey,LV19,0,2,8,520

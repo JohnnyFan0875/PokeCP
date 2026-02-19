@@ -1,4 +1,4 @@
-Name,Level,Attack_IV,Defense_IV,HP_IV,CP
+Name,Level,IV_Attack,IV_Defense,IV_HP,CP
 Archen,LV12,0,0,0,520
 Archen,LV11.5,0,0,13,520
 Archen,LV11.5,0,2,10,520

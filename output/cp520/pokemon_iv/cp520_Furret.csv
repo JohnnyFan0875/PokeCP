@@ -1,4 +1,4 @@
-Name,Level,Attack_IV,Defense_IV,HP_IV,CP
+Name,Level,IV_Attack,IV_Defense,IV_HP,CP
 Furret,LV12.5,0,0,1,520
 Furret,LV12,0,2,14,520
 Furret,LV12,0,3,13,520

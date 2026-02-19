@@ -47,4 +47,4 @@ if __name__ == '__main__':
 
     run('calculate_cp.py', calc_args)
 
-    print(f"\n✅ Done! Output: output/cp{args.cp}/cp{args.cp}_all_evolutions.csv")
+    print(f"\nDone! Output: output/cp{args.cp}/cp{args.cp}_all_evolutions.csv")

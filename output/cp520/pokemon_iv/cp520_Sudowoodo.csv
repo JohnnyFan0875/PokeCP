@@ -1,4 +1,4 @@
-Name,Level,Attack_IV,Defense_IV,HP_IV,CP
+Name,Level,IV_Attack,IV_Defense,IV_HP,CP
 Sudowoodo,LV10,0,0,1,520
 Sudowoodo,LV10,0,1,0,520
 Sudowoodo,LV9.5,0,6,15,520
