@@ -491,7 +491,9 @@ Cranidos,YES
 Rampardos,YES
 Shieldon,YES
 Bastiodon,YES
-Burmy,YES
+Burmy Plant Cloak,YES
+Burmy Sandy Cloak,YES
+Burmy Trash Cloak,YES
 Wormadam Plant Cloak,NO
 Wormadam Sandy Cloak,YES
 Wormadam Trash Cloak,YES
@@ -566,7 +568,7 @@ Gallade,NO
 Probopass,YES
 Dusknoir,YES
 Froslass,YES
-Rotom,NO
+Rotom Rotom,NO
 Rotom Fan Rotom,NO
 Rotom Frost Rotom,NO
 Rotom Heat Rotom,NO
@@ -689,8 +691,14 @@ Swanna,YES
 Vanillite,YES
 Vanillish,YES
 Vanilluxe,NO
-Deerling,YES
-Sawsbuck,NO
+Deerling Spring Form,YES
+Deerling Summer Form,YES
+Deerling Autumn Form,YES
+Deerling Winter Form,YES
+Sawsbuck Spring Form,NO
+Sawsbuck Summer Form,NO
+Sawsbuck Autumn Form,NO
+Sawsbuck Winter Form,NO
 Emolga,NO
 Karrablast,YES
 Escavalier,YES
@@ -825,14 +833,14 @@ Goodra,YES
 Klefki,YES
 Phantump,YES
 Trevenant,YES
-Pumpkaboo Small Size,YES
-Pumpkaboo Average Size,YES
-Pumpkaboo Large Size,YES
-Pumpkaboo Super Size,YES
-Gourgeist Small Size,NO
-Gourgeist Average Size,YES
-Gourgeist Large Size,YES
-Gourgeist Super Size,YES
+Pumpkaboo Small Variety,YES
+Pumpkaboo Medium Variety,YES
+Pumpkaboo Large Variety,YES
+Pumpkaboo Jumbo Variety,YES
+Gourgeist Small Variety,NO
+Gourgeist Medium Variety,YES
+Gourgeist Large Variety,YES
+Gourgeist Jumbo Variety,YES
 Bergmite,YES
 Avalugg,YES
 Avalugg Hisuian Form,NO
@@ -868,7 +876,10 @@ Charjabug,YES
 Vikavolt,YES
 Crabrawler,YES
 Crabominable,NO
-Oricorio,NO
+Oricorio Baile Style,NO
+Oricorio Pom-Pom Style,NO
+Oricorio Pa'u Style,NO
+Oricorio Sensu Style,YES
 Cutiefly,YES
 Ribombee,YES
 Rockruff,YES
@@ -995,8 +1006,8 @@ Ceruledge,NO
 Varoom,NO
 Revavroom,NO
 Heracross Mega Heracross,NO
-Necrozma Dusk Mane Necrozma,NO
-Necrozma Dawn Wings Necrozma,NO
+Necrozma Dusk Mane,NO
+Necrozma Dawn Wings,NO
 Wiglett,NO
 Wugtrio,NO
 Lucario Mega Lucario,NO
@@ -1014,8 +1025,8 @@ Sobble,YES
 Drizzile,YES
 Inteleon,YES
 Stonjourner,NO
-Morpeko Full Belly,NO
-Morpeko Hangry,NO
+Morpeko Full Belly Mode,NO
+Morpeko Hangry Mode,NO
 Dreepy,YES
 Drakloak,NO
 Dragapult,NO
@@ -1040,6 +1051,7 @@ Cursola,NO
 Zacian Crowned Sword,NO
 Zamazenta Crowned Shield,NO
 Eternatus,NO
+Eternatus Eternamax,NO
 Kubfu,NO
 Fidough,YES
 Dachsbun,NO
@@ -1048,9 +1060,9 @@ Grafaiai,NO
 Tinkatink,NO
 Tinkatuff,NO
 Tinkaton,NO
-Tauros Paldean Form; Combat Breed,NO
-Tauros Paldean Form; Aqua Breed,NO
-Tauros Paldean Form; Blaze Breed,NO
+Tauros Paldean Form Combat Breed,NO
+Tauros Paldean Form Blaze Breed,NO
+Tauros Paldean Form Aqua Breed,NO
 Audino Mega Audino,NO
 Gossifleur,YES
 Eldegoss,NO
@@ -1072,7 +1084,9 @@ Lilligant Hisuian Form,NO
 Snom,NO
 Frosmoth,NO
 Dondozo,NO
-Tatsugiri,NO
+Tatsugiri Curly Form,NO
+Tatsugiri Droopy Form,NO
+Tatsugiri Stretchy Form,NO
 Sharpedo Mega Sharpedo,NO
 Camerupt Mega Camerupt,NO
 Metagross Mega Metagross,NO

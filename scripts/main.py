@@ -1,21 +1,50 @@
+"""
+main.py
+
+Entry point: runs the scraper then the CP calculator.
+
+Usage:
+    python main.py              # default CP=520
+    python main.py --cp 1500    # Great League CP cap
+    python main.py --cp 1500 --shadow   # include Shadow→Purified eligibility column
+"""
+import argparse
 import subprocess
 import sys
+from pathlib import Path
 
-def run_script(script_name, args=[]):
-    command = [sys.executable, script_name] + args
-    print(f"Running: {' '.join(command)}")
-    result = subprocess.run(command)
+
+SCRIPTS_DIR = Path(__file__).parent
+
+
+def run(script: str, extra_args: list[str] = []):
+    cmd = [sys.executable, str(SCRIPTS_DIR / script)] + extra_args
+    print(f"\n{'─'*50}")
+    print(f"Running: {' '.join(cmd)}")
+    print(f"{'─'*50}")
+    result = subprocess.run(cmd)
     if result.returncode != 0:
-        sys.exit(f"Error: {script_name} failed with exit code {result.returncode}")
+        sys.exit(f"[ERROR] {script} failed (exit code {result.returncode})")
 
-if __name__ == "__main__":
-    # Run scraper
-    run_script("./scripts/scraper.py")
 
-    # Get CP value from arguments or set default
-    cp_value = "520"
+def parse_args():
+    parser = argparse.ArgumentParser(description="Pokémon GO CP Calculator Pipeline")
+    parser.add_argument('--cp', type=int, default=520,
+                        help='Target CP value to calculate (default: 520)')
+    parser.add_argument('--shadow', action='store_true',
+                        help='Include Shadow→Purified (+2 IV) eligibility column in output')
+    return parser.parse_args()
 
-    # Run calculation
-    run_script("./scripts/calculate_cp.py", ["--cp", cp_value])
 
-    print("All steps completed successfully.")
+if __name__ == '__main__':
+    args = parse_args()
+
+    run('scraper.py')
+
+    calc_args = ['--cp', str(args.cp)]
+    if args.shadow:
+        calc_args.append('--shadow')
+
+    run('calculate_cp.py', calc_args)
+
+    print(f"\n✅ Done! Output: output/cp{args.cp}/cp{args.cp}_all_evolutions.csv")

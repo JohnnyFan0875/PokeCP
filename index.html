@@ -1,269 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Pokemon GO Evolution Table (CP520)</title>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pokémon GO CP Calculator</title>
 
-    <!-- DataTables CSS -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.datatables.net/fixedheader/3.3.2/css/fixedHeader.dataTables.min.css"
-    />
+  <!-- DataTables CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
 
-    <!-- jQuery UI CSS -->
-    <link
-      rel="stylesheet"
-      href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css"
-    />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
 
-    <!-- Your external CSS -->
-    <link rel="stylesheet" href="assets/css/style.css" />
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <!-- jQuery UI (autocomplete) -->
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" />
+  <!-- DataTables JS -->
+  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+  <!-- PapaParse -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
-    <!-- jQuery must load before jQuery UI -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
 
-    <!-- jQuery UI -->
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-title">
+        <span class="pokeball-icon">⬤</span>
+        <h1>PokéCP</h1>
+        <span class="header-sub">Evolution Calculator</span>
+      </div>
 
-    <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/fixedheader/3.3.2/js/dataTables.fixedHeader.min.js"></script>
+      <!-- CP Input -->
+      <div class="cp-control">
+        <label for="cp-input">Target CP</label>
+        <div class="cp-input-wrap">
+          <input type="number" id="cp-input" value="520" min="10" max="9999" placeholder="e.g. 520" />
+          <button id="load-cp-btn">Load</button>
+        </div>
+      </div>
+    </div>
+  </header>
 
-    <!-- PapaParse -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <main class="main-content">
 
-    <!-- viewport -->
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Controls bar -->
+    <div class="controls-bar">
+      <div class="controls-left">
+        <button id="clear-filters" class="btn btn-secondary">✕ Clear Filters</button>
+      </div>
 
-  </head>
+      <div class="controls-right">
+        <!-- Shadow Purified toggle -->
+        <div class="shadow-control">
+          <label class="checkbox-label">
+            <input type="checkbox" id="shadow-purified-toggle" />
+            <span class="checkbox-custom"></span>
+            <span class="checkbox-text">👻 Shadow → Purified (+2 IV)</span>
+          </label>
+          <span class="shadow-hint">Show rows where Purified IV can reach target CP</span>
+        </div>
 
-  <body>
-    <h1 style="text-align: center">Pokemon Go Evolution Table (CP520)</h1>
-
-    <div
-      class="top-controls"
-      style="
-        display: flex;
-        align-items: center;
-        gap: 1em;
-        justify-content: flex-start;
-        margin-bottom: 1em;
-      "
-    >
-      <button id="clear-filters">Clear Filters</button>
-
-      <div
-        id="toggle-switch"
-        style="display: flex; align-items: center; gap: 1em; margin-left: auto"
-      >
-        <span>Non-collected</span>
-        <label class="switch">
-          <input type="checkbox" id="noncollected-toggle" checked />
-          <span class="slider"></span>
-        </label>
-        <span>All</span>
+        <!-- Collected toggle -->
+        <div class="toggle-control">
+          <span class="toggle-label" id="toggle-label-left">Non-Collected</span>
+          <label class="switch">
+            <input type="checkbox" id="collected-toggle" />
+            <span class="slider"></span>
+          </label>
+          <span class="toggle-label" id="toggle-label-right">All</span>
+        </div>
       </div>
     </div>
 
-    <div class="table-responsive"></div>
-      <table id="evo-table" class="display" style="width: 100%">
-        <thead>
-          <tr>
-            <th>Pokemon</th>
-            <th>Level</th>
-            <th>Attack</th>
-            <th>Defense</th>
-            <th>HP</th>
-            <th>Evolution CP</th>
-            <th>Collected</th>
-          </tr>
-          <tr>
-            <th><input type="text" placeholder="Search Pokemon" /></th>
-            <th>
-              <select id="level-filter">
-                <option value="">All</option>
-                <option value="1">LV1</option>
-                <option value="1.5">LV1.5</option>
-                <option value="2">LV2</option>
-                <option value="2.5">LV2.5</option>
-                <option value="3">LV3</option>
-                <option value="3.5">LV3.5</option>
-                <option value="4">LV4</option>
-                <option value="4.5">LV4.5</option>
-                <option value="5">LV5</option>
-                <option value="5.5">LV5.5</option>
-                <option value="6">LV6</option>
-                <option value="6.5">LV6.5</option>
-                <option value="7">LV7</option>
-                <option value="7.5">LV7.5</option>
-                <option value="8">LV8</option>
-                <option value="8.5">LV8.5</option>
-                <option value="9">LV9</option>
-                <option value="9.5">LV9.5</option>
-                <option value="10">LV10</option>
-                <option value="10.5">LV10.5</option>
-                <option value="11">LV11</option>
-                <option value="11.5">LV11.5</option>
-                <option value="12">LV12</option>
-                <option value="12.5">LV12.5</option>
-                <option value="13">LV13</option>
-                <option value="13.5">LV13.5</option>
-                <option value="14">LV14</option>
-                <option value="14.5">LV14.5</option>
-                <option value="15">LV15</option>
-                <option value="15.5">LV15.5</option>
-                <option value="16">LV16</option>
-                <option value="16.5">LV16.5</option>
-                <option value="17">LV17</option>
-                <option value="17.5">LV17.5</option>
-                <option value="18">LV18</option>
-                <option value="18.5">LV18.5</option>
-                <option value="19">LV19</option>
-                <option value="19.5">LV19.5</option>
-                <option value="20">LV20</option>
-                <option value="20.5">LV20.5</option>
-                <option value="21">LV21</option>
-                <option value="21.5">LV21.5</option>
-                <option value="22">LV22</option>
-                <option value="22.5">LV22.5</option>
-                <option value="23">LV23</option>
-                <option value="23.5">LV23.5</option>
-                <option value="24">LV24</option>
-                <option value="24.5">LV24.5</option>
-                <option value="25">LV25</option>
-                <option value="25.5">LV25.5</option>
-                <option value="26">LV26</option>
-                <option value="26.5">LV26.5</option>
-                <option value="27">LV27</option>
-                <option value="27.5">LV27.5</option>
-                <option value="28">LV28</option>
-                <option value="28.5">LV28.5</option>
-                <option value="29">LV29</option>
-                <option value="29.5">LV29.5</option>
-                <option value="30">LV30</option>
-                <option value="30.5">LV30.5</option>
-                <option value="31">LV31</option>
-                <option value="31.5">LV31.5</option>
-                <option value="32">LV32</option>
-                <option value="32.5">LV32.5</option>
-                <option value="33">LV33</option>
-                <option value="33.5">LV33.5</option>
-                <option value="34">LV34</option>
-                <option value="34.5">LV34.5</option>
-                <option value="35">LV35</option>
-                <option value="35.5">LV35.5</option>
-                <option value="36">LV36</option>
-                <option value="36.5">LV36.5</option>
-                <option value="37">LV37</option>
-                <option value="37.5">LV37.5</option>
-                <option value="38">LV38</option>
-                <option value="38.5">LV38.5</option>
-                <option value="39">LV39</option>
-                <option value="39.5">LV39.5</option>
-                <option value="40">LV40</option>
-                <option value="40.5">LV40.5</option>
-                <option value="41">LV41</option>
-                <option value="41.5">LV41.5</option>
-                <option value="42">LV42</option>
-                <option value="42.5">LV42.5</option>
-                <option value="43">LV43</option>
-                <option value="43.5">LV43.5</option>
-                <option value="44">LV44</option>
-                <option value="44.5">LV44.5</option>
-                <option value="45">LV45</option>
-                <option value="45.5">LV45.5</option>
-                <option value="46">LV46</option>
-                <option value="46.5">LV46.5</option>
-                <option value="47">LV47</option>
-                <option value="47.5">LV47.5</option>
-                <option value="48">LV48</option>
-                <option value="48.5">LV48.5</option>
-                <option value="49">LV49</option>
-                <option value="49.5">LV49.5</option>
-                <option value="50">LV50</option>
-              </select>
-            </th>
-            <th>
-              <select id="attack-filter">
-                <option value="">All</option>
-                <option value="0">0</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
-                <option value="13">13</option>
-                <option value="14">14</option>
-                <option value="15">15</option>
-              </select>
-            </th>
-            <th>
-              <select id="defense-filter">
-                <option value="">All</option>
-                <option value="0">0</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
-                <option value="13">13</option>
-                <option value="14">14</option>
-                <option value="15">15</option>
-              </select>
-            </th>
-            <th>
-              <select id="hp-filter">
-                <option value="">All</option>
-                <option value="0">0</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
-                <option value="13">13</option>
-                <option value="14">14</option>
-                <option value="15">15</option>
-              </select>
-            </th>
-            <th><input type="text" placeholder="Search Evolution" /></th>
-            <th>
-              <select id="collected">
-                <option value="">All</option>
-                <option value="YES">YES</option>
-                <option value="NO">NO</option>
-              </select>
-            </th>
-          </tr>
-        </thead>
-      </table>
+    <!-- Loading state -->
+    <div id="loading-state" class="loading-state" style="display:none;">
+      <div class="spinner"></div>
+      <p>Loading CP data…</p>
     </div>
 
-    <!-- External JavaScript -->
-    <script src="assets/js/main.js"></script>
-  </body>
+    <!-- Error state -->
+    <div id="error-state" class="error-state" style="display:none;">
+      <p id="error-msg">Could not load CSV file.</p>
+    </div>
+
+    <!-- Table wrapper -->
+    <div class="table-card" id="table-card">
+      <div class="table-responsive">
+        <table id="evo-table" class="display" style="width:100%">
+          <thead>
+            <tr>
+              <th>Pokémon</th>
+              <th>Level</th>
+              <th>ATK IV</th>
+              <th>DEF IV</th>
+              <th>HP IV</th>
+              <th>Evolution Chain (CP)</th>
+              <th>Collected</th>
+            </tr>
+            <tr id="filter-row">
+              <th><input type="text" class="col-filter" placeholder="Search…" /></th>
+              <th>
+                <select id="level-filter" class="col-filter">
+                  <option value="">All</option>
+                </select>
+              </th>
+              <th>
+                <select id="attack-filter" class="col-filter">
+                  <option value="">All</option>
+                </select>
+              </th>
+              <th>
+                <select id="defense-filter" class="col-filter">
+                  <option value="">All</option>
+                </select>
+              </th>
+              <th>
+                <select id="hp-filter" class="col-filter">
+                  <option value="">All</option>
+                </select>
+              </th>
+              <th><input type="text" class="col-filter" placeholder="Search…" /></th>
+              <th>
+                <select id="collected-filter" class="col-filter">
+                  <option value="">All</option>
+                  <option value="YES">YES</option>
+                  <option value="NO">NO</option>
+                </select>
+              </th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="assets/js/main.js"></script>
+</body>
 </html>
