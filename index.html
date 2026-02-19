@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pokémon GO CP Calculator</title>
+  <title>PokéCP Evolution Calculator</title>
 
   <!-- DataTables CSS -->
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
@@ -42,6 +42,16 @@
           <button id="load-cp-btn">Load</button>
         </div>
       </div>
+
+      <!-- Mode Toggle -->
+      <div class="mode-toggle-wrap">
+        <button class="mode-btn active" id="mode-normal" data-mode="normal">
+          Normal
+        </button>
+        <button class="mode-btn" id="mode-shadow" data-mode="shadow">
+          Shadow/Purified
+        </button>
+      </div>
     </div>
   </header>
 
@@ -52,17 +62,9 @@
       <div class="controls-left">
         <button id="clear-filters" class="btn btn-secondary">✕ Clear Filters</button>
       </div>
-
       <div class="controls-right">
-        <!-- Shadow Purified toggle -->
-        <div class="shadow-control">
-          <label class="checkbox-label">
-            <input type="checkbox" id="shadow-purified-toggle" />
-            <span class="checkbox-custom"></span>
-            <span class="checkbox-text">Shadow → Purified (+2 IV)</span>
-          </label>
-          <span class="shadow-hint">Show rows where Purified IV can reach target CP</span>
-        </div>
+        <!-- Mode badge -->
+        <div id="mode-badge" class="mode-badge mode-badge-normal">⚡ Normal Mode</div>
       </div>
     </div>
 
@@ -77,8 +79,8 @@
       <p id="error-msg">Could not load CSV file.</p>
     </div>
 
-    <!-- Table wrapper -->
-    <div class="table-card" id="table-card">
+    <!-- NORMAL TABLE -->
+    <div class="table-card" id="table-card-normal">
       <div class="table-responsive">
         <table id="evo-table" class="display" style="width:100%">
           <thead>
@@ -88,7 +90,7 @@
               <th>ATK IV</th>
               <th>DEF IV</th>
               <th>HP IV</th>
-              <th>Evolution Chain (CP)</span></th>
+              <th>Evolution Chain (CP)</th>
               <th>Collected</th>
             </tr>
             <tr id="filter-row">
@@ -116,6 +118,68 @@
               <th><input type="text" class="col-filter" placeholder="Search…" /></th>
               <th>
                 <select id="collected-filter" class="col-filter">
+                  <option value="">All</option>
+                  <option value="YES">YES</option>
+                  <option value="NO">NO</option>
+                </select>
+              </th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+
+    <!-- SHADOW TABLE -->
+    <div class="table-card" id="table-card-shadow" style="display:none;">
+      <div class="table-responsive">
+        <table id="shadow-table" class="display" style="width:100%">
+          <thead>
+            <tr>
+              <th>Pokemon</th>
+              <th>Level</th>
+              <th>ATK IV</th>
+              <th>DEF IV</th>
+              <th>HP IV</th>
+              <th>ATK IV</th>
+              <th>DEF IV</th>
+              <th>HP IV</th>
+              <th>Evolution Chains (CP)</th>
+              <th>Collected Shadow</th>
+              <th>Collected Purified</th>
+            </tr>
+            <tr id="shadow-filter-inputs">
+              <th><input type="text" class="col-filter" id="sf-pokemon" placeholder="Search…" /></th>
+              <th>
+                <select id="sf-level" class="col-filter"><option value="">All</option></select>
+              </th>
+              <th>
+                <select id="sf-satk" class="col-filter"><option value="">All</option></select>
+              </th>
+              <th>
+                <select id="sf-sdef" class="col-filter"><option value="">All</option></select>
+              </th>
+              <th>
+                <select id="sf-shp" class="col-filter"><option value="">All</option></select>
+              </th>
+              <th>
+                <select id="sf-patk" class="col-filter"><option value="">All</option></select>
+              </th>
+              <th>
+                <select id="sf-pdef" class="col-filter"><option value="">All</option></select>
+              </th>
+              <th>
+                <select id="sf-php" class="col-filter"><option value="">All</option></select>
+              </th>
+              <th><input type="text" class="col-filter" id="sf-evo" placeholder="Search…" /></th>
+              <th>
+                <select id="sf-cshadow" class="col-filter">
+                  <option value="">All</option>
+                  <option value="YES">YES</option>
+                  <option value="NO">NO</option>
+                </select>
+              </th>
+              <th>
+                <select id="sf-cpurified" class="col-filter">
                   <option value="">All</option>
                   <option value="YES">YES</option>
                   <option value="NO">NO</option>

@@ -4,56 +4,64 @@
 
 $(document).ready(function () {
 
-  let dtTable = null;
-  let rawData = [];
-  let currentCP = null;
-  let showShadowPurified = false;
+  let dtTable     = null;   // normal DataTable
+  let shadowTable = null;   // shadow DataTable
+  let rawData     = [];
+  let rawShadowData = [];
+  let currentCP   = null;
+  let currentMode = 'normal'; // 'normal' | 'shadow'
 
   // ─── Utility ───────────────────────────────────────────────────────────────
 
-  /**
-   * Pokémon GO CP formula
-   * CP = floor( (BaseAtk + atkIV) * sqrt(BaseDef + defIV) * sqrt(BaseHP + hpIV) * CPM² / 10 )
-   *
-   * For Shadow→Purified: each IV gets +2 (capped at 15)
-   * We don't have base stats here, but we can check if purified combo
-   * (atkIV+2, defIV+2, hpIV+2) appeared anywhere in the CSV data.
-   *
-   * Since the CSV already contains pre-calculated rows, we identify
-   * "shadow eligible" rows by checking if the same Pokémon + Level
-   * exists in rawData with IVs that are each 2 lower (shadow IVs → purified = this row's IVs).
-   */
-
-  function buildShadowEligibleSet(data) {
-    // A row is "shadow eligible" if there exists ANOTHER row where:
-    //   same Pokemon + Level, and all IVs are exactly 2 higher (i.e. shadow source IVs +2)
-    // In other words: this row's IVs could be the PURIFIED result of a shadow with IVs (atk-2, def-2, hp-2).
-    // Equivalently: does a shadow Pokémon exist at (atk-2, def-2, hp-2) that, after purifying (+2 each), reaches this CP?
-
-    // Since all rows in the CSV are valid at the target CP,
-    // we want rows where atk >= 2, def >= 2, hp >= 2
-    // (meaning shadow IVs 0/1/2... can reach this IV after +2 purify bonus)
-    // AND the shadow itself might have been at CP that is catchable/findable.
-    // 
-    // Practical logic: a shadow caught at some CP, when purified, gains +2 IV each stat.
-    // The shadow's IVs before purify are: (atkIV-2, defIV-2, hpIV-2).
-    // If any of those would be negative, impossible → skip.
-    //
-    // Since we don't have the shadow's CP in this dataset,
-    // we flag rows where (atkIV-2 >= 0 AND defIV-2 >= 0 AND hpIV-2 >= 0)
-    // = the row COULD be reached by purifying a shadow.
-
-    const eligible = new Set();
-    data.forEach((row, idx) => {
-      const a = parseInt(row.IV_Attack, 10);
-      const d = parseInt(row.IV_Defense, 10);
-      const h = parseInt(row.IV_HP, 10);
-      if (a >= 2 && d >= 2 && h >= 2) {
-        eligible.add(idx);
-      }
-    });
-    return eligible;
+  function ivClass(val) {
+    const n = parseInt(val, 10);
+    if (n === 15) return 'iv-perfect';
+    if (n >= 13)  return 'iv-great';
+    if (n >= 1)   return 'iv-good';
+    return 'iv-0';
   }
+
+  function escapeRegex(str) {
+    return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+  }
+
+  function renderEvoChain(chainStr, targetCP) {
+    if (!chainStr) return '';
+    const parts = chainStr.split('-');
+    return parts.map(part => {
+      const match = part.match(/^(.+)\((\d+)\)$/);
+      if (!match) return `<span class="evo-part">${part}</span>`;
+      const name = match[1];
+      const cp   = parseInt(match[2], 10);
+      const cls  = (cp === targetCP) ? 'evo-part evo-target' : 'evo-part';
+      return `<span class="${cls}">${name}<span class="evo-cp">(${cp})</span></span>`;
+    }).join('<span class="evo-arrow"> → </span>');
+  }
+
+  // ─── Mode Toggle ───────────────────────────────────────────────────────────
+
+  $('.mode-btn').on('click', function () {
+    const mode = $(this).data('mode');
+    if (mode === currentMode) return;
+    currentMode = mode;
+
+    $('.mode-btn').removeClass('active');
+    $(this).addClass('active');
+
+    if (mode === 'normal') {
+      $('#table-card-normal').show();
+      $('#table-card-shadow').hide();
+      $('#mode-badge').removeClass('mode-badge-shadow').addClass('mode-badge-normal').html('Normal Mode');
+    } else {
+      $('#table-card-normal').hide();
+      $('#table-card-shadow').show();
+      $('#mode-badge').removeClass('mode-badge-normal').addClass('mode-badge-shadow').html('Shadow/Purified Mode');
+      // Load shadow data if not loaded yet
+      if (rawShadowData.length === 0 && currentCP !== null) {
+        loadShadowCSV(currentCP);
+      }
+    }
+  });
 
   // ─── Populate filter dropdowns ─────────────────────────────────────────────
 
@@ -65,35 +73,18 @@ $(document).ready(function () {
     }
   }
 
-  function buildLevelOptions(data) {
+  function buildLevelOptions(data, selectId) {
     const levels = [...new Set(data.map(r => r.Level))]
       .filter(Boolean)
-      .sort((a, b) => {
-        const na = parseFloat(a.replace('LV', ''));
-        const nb = parseFloat(b.replace('LV', ''));
-        return na - nb;
-      });
-
-    const $sel = $('#level-filter');
+      .sort((a, b) => parseFloat(a.replace('LV', '')) - parseFloat(b.replace('LV', '')));
+    const $sel = $('#' + selectId);
     $sel.empty().append('<option value="">All</option>');
-    levels.forEach(lv => {
-      $sel.append(`<option value="${lv}">${lv}</option>`);
-    });
+    levels.forEach(lv => $sel.append(`<option value="${lv}">${lv}</option>`));
   }
 
-  // ─── IV cell class helper ──────────────────────────────────────────────────
+  // ─── NORMAL TABLE ──────────────────────────────────────────────────────────
 
-  function ivClass(val) {
-    const n = parseInt(val, 10);
-    if (n === 15) return 'iv-perfect';
-    if (n >= 13) return 'iv-great';
-    if (n >= 1)  return 'iv-good';
-    return 'iv-0';
-  }
-
-  // ─── Render / Init DataTable ───────────────────────────────────────────────
-
-  function initTable(data) {
+  function initNormalTable(data) {
     if (dtTable) {
       dtTable.destroy();
       $('#evo-table tbody').empty();
@@ -101,9 +92,7 @@ $(document).ready(function () {
     }
 
     rawData = data;
-    const shadowSet = buildShadowEligibleSet(data);
-
-    buildLevelOptions(data);
+    buildLevelOptions(data, 'level-filter');
     buildIVOptions('attack-filter');
     buildIVOptions('defense-filter');
     buildIVOptions('hp-filter');
@@ -119,34 +108,16 @@ $(document).ready(function () {
         { data: 'IV_HP' },
         {
           data: 'Evolution(CP)',
-          render: function (data) {
-            if (!data) return '';
-            // Split chain by ' → ' separator visually, data stored with '-'
-            const parts = data.split('-');
-            return parts.map(part => {
-              // Each part is like "Butterfree(520)"
-              const match = part.match(/^(.+)\((\d+)\)$/);
-              if (!match) return `<span class="evo-part">${part}</span>`;
-              const name = match[1];
-              const cp   = parseInt(match[2], 10);
-              const cls  = (cp === currentCP) ? 'evo-part evo-target' : 'evo-part';
-              return `<span class="${cls}">${name}<span class="evo-cp">(${cp})</span></span>`;
-            }).join('<span class="evo-arrow"> → </span>');
-          }
+          render: function (val) { return renderEvoChain(val, currentCP); }
         },
         { data: 'Collected' },
       ],
       columnDefs: [
-        // Disable sorting on ALL columns
         { targets: '_all', orderable: false },
-        // IV columns: color class
         {
           targets: [2, 3, 4],
-          createdCell: function (td, cellData) {
-            $(td).addClass(ivClass(cellData));
-          }
+          createdCell: function (td, cellData) { $(td).addClass(ivClass(cellData)); }
         },
-        // Collected: badge styling
         {
           targets: 6,
           createdCell: function (td, cellData) {
@@ -155,13 +126,7 @@ $(document).ready(function () {
           }
         },
       ],
-      rowCallback: function (row, rowData, rowIndex) {
-        if (shadowSet.has(rowIndex)) {
-          $(row).addClass('shadow-eligible-source');
-        }
-      },
-      order: [[0, 'asc'], [2, 'asc'], [3, 'asc'], [4, 'asc']],
-      pageLength: 100,
+      pageLength: 50,
       lengthMenu: [25, 50, 100, 200, 500],
       dom: '<"dt-top"lf>rt<"dt-bottom"ip>',
       autoWidth: false,
@@ -169,167 +134,285 @@ $(document).ready(function () {
         search: 'Quick Search:',
         lengthMenu: 'Show _MENU_',
         info: 'Showing _START_–_END_ of _TOTAL_ entries',
-        paginate: {
-          previous: '‹',
-          next: '›',
-        },
+        paginate: { previous: '‹', next: '›' },
       },
     });
 
-    // Apply shadow filter if toggle is on
-    if (showShadowPurified) {
-      applyShadowFilter();
-    }
-
-    bindColumnFilters();
-    bindAutocomplete();
+    bindNormalFilters();
+    bindNormalAutocomplete();
   }
 
-  // ─── Column filter bindings ────────────────────────────────────────────────
-
-  function bindColumnFilters() {
+  function bindNormalFilters() {
     if (!dtTable) return;
 
-    // Pokemon name (col 0) - text input
-    $('#evo-table thead tr#filter-row th:eq(0) input')
-      .off('keyup change')
-      .on('keyup change', function () {
-        dtTable.column(0).search(this.value).draw();
-      });
-
-    // Level (col 1)
-    $('#level-filter').off('change').on('change', function () {
-      const val = this.value;
-      dtTable.column(1).search(val ? '^' + escapeRegex(val) + '$' : '', true, false).draw();
+    $('#evo-table thead tr#filter-row th:eq(0) input').off('keyup change').on('keyup change', function () {
+      dtTable.column(0).search(this.value).draw();
     });
-
-    // ATK / DEF / HP (cols 2,3,4) - exact match
+    $('#level-filter').off('change').on('change', function () {
+      dtTable.column(1).search(this.value ? '^' + escapeRegex(this.value) + '$' : '', true, false).draw();
+    });
     [['attack-filter', 2], ['defense-filter', 3], ['hp-filter', 4]].forEach(([id, col]) => {
       $('#' + id).off('change').on('change', function () {
-        const val = this.value;
-        dtTable.column(col).search(val ? '^' + val + '$' : '', true, false).draw();
+        dtTable.column(col).search(this.value ? '^' + this.value + '$' : '', true, false).draw();
       });
     });
-
-    // Evolution CP (col 5) - text input
-    $('#evo-table thead tr#filter-row th:eq(5) input')
-      .off('keyup change')
-      .on('keyup change', function () {
-        dtTable.column(5).search(this.value).draw();
-      });
-
-    // Collected filter (col 6)
+    $('#evo-table thead tr#filter-row th:eq(5) input').off('keyup change').on('keyup change', function () {
+      dtTable.column(5).search(this.value).draw();
+    });
     $('#collected-filter').off('change').on('change', function () {
-      const val = this.value;
-      dtTable.column(6).search(val ? '^' + escapeRegex(val) + '$' : '', true, false).draw();
+      dtTable.column(6).search(this.value ? '^' + escapeRegex(this.value) + '$' : '', true, false).draw();
     });
   }
 
-  function escapeRegex(str) {
-    return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-  }
-
-  // ─── Autocomplete for Pokemon name ────────────────────────────────────────
-
-  function bindAutocomplete() {
+  function bindNormalAutocomplete() {
     if (!dtTable) return;
-
-    const pokemonNames = [...new Set(
-      dtTable.column(0).data().toArray().filter(v => v)
-    )].sort();
-
+    const names = [...new Set(dtTable.column(0).data().toArray().filter(v => v))].sort();
     const $input = $('#evo-table thead tr#filter-row th:eq(0) input');
     if ($input.data('ui-autocomplete')) $input.autocomplete('destroy');
-
     $input.autocomplete({
       source: function (req, resp) {
         const term = req.term.toLowerCase();
-        resp(pokemonNames.filter(v => v.toLowerCase().includes(term)).slice(0, 20));
+        resp(names.filter(v => v.toLowerCase().includes(term)).slice(0, 20));
       },
-      minLength: 1,
-      delay: 0,
-      select: function (event, ui) {
-        dtTable.column(0).search(ui.item.value).draw();
-      },
+      minLength: 1, delay: 0,
+      select: function (event, ui) { dtTable.column(0).search(ui.item.value).draw(); },
     });
   }
 
-  // (Collected toggle removed - use #collected-filter dropdown)
-
-  // ─── Shadow Purified filter ────────────────────────────────────────────────
+  // ─── SHADOW TABLE ──────────────────────────────────────────────────────────
 
   /**
-   * When shadow-purified mode is ON:
-   * We use a custom DataTables search function that only shows rows
-   * where the IVs could come from a shadow (atk-2 >= 0, def-2 >= 0, hp-2 >= 0).
-   * We also add a visual badge to those rows.
+   * Shadow CSV columns:
+   * Pokemon, CP, Level,
+   * Shadow_ATK_IV, Shadow_DEF_IV, Shadow_HP_IV,
+   * Purified_ATK_IV, Purified_DEF_IV, Purified_HP_IV,
+   * Evolution_Shadow(CP), Evolution_Purified(CP),
+   * Collected_Shadow, Collected_Purified
+   *
+   * We render each CSV row as TWO <tr> rows in the table:
+   *   Row 1 (shadow)  - shadow IVs highlighted purple, shadow evo chain
+   *   Row 2 (purified)- purified IVs highlighted gold, purified evo chain
+   *
+   * We do this via createdRow + rowCallback by appending a synthetic sub-row.
+   * Simpler approach: pre-process data into display rows where we combine
+   * both sub-rows into a single DataTables row and use render to show stacked cells.
    */
 
-  let shadowSearchFn = null;
-
-  function applyShadowFilter() {
-    if (!dtTable) return;
-    if (shadowSearchFn) {
-      $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter(fn => fn !== shadowSearchFn);
+  function initShadowTable(data) {
+    if (shadowTable) {
+      shadowTable.destroy();
+      $('#shadow-table tbody').empty();
+      shadowTable = null;
     }
 
-    shadowSearchFn = function (settings, data) {
-      if (settings.nTable !== document.getElementById('evo-table')) return true;
-      const atk   = parseInt(data[2], 10);
-      const def   = parseInt(data[3], 10);
-      const hp    = parseInt(data[4], 10);
-      const level = parseFloat((data[1] || '').replace('LV', ''));
-      // Shadow IVs (before purify) must be >= 0 → purified IVs >= 2
-      // Shadow Pokémon are capped at LV25 before purification
-      return atk >= 2 && def >= 2 && hp >= 2 && level >= 25;
+    rawShadowData = data;
+    buildLevelOptions(data, 'sf-level');
+    ['sf-satk','sf-sdef','sf-shp','sf-patk','sf-pdef','sf-php'].forEach(id => buildIVOptions(id));
+
+    // Each row will render shadow + purified stacked in cells
+    shadowTable = $('#shadow-table').DataTable({
+      data: data,
+      deferRender: true,
+      columns: [
+        // 0: Pokemon
+        { data: 'Pokemon' },
+        // 1: Level
+        { data: 'Level' },
+        // 2: Shadow ATK
+        {
+          data: null,
+          render: function (row) {
+            return ivStackCell(row['Shadow_ATK_IV'], row['Purified_ATK_IV'], 'atk');
+          }
+        },
+        // 3: Shadow DEF
+        {
+          data: null,
+          render: function (row) {
+            return ivStackCell(row['Shadow_DEF_IV'], row['Purified_DEF_IV'], 'def');
+          }
+        },
+        // 4: Shadow HP
+        {
+          data: null,
+          render: function (row) {
+            return ivStackCell(row['Shadow_HP_IV'], row['Purified_HP_IV'], 'hp');
+          }
+        },
+        // 5: Purified ATK (hidden, used for filtering)
+        { data: 'Purified_ATK_IV', visible: false },
+        // 6: Purified DEF (hidden)
+        { data: 'Purified_DEF_IV', visible: false },
+        // 7: Purified HP (hidden)
+        { data: 'Purified_HP_IV', visible: false },
+        // 8: Evolution chains (stacked shadow + purified)
+        {
+          data: null,
+          render: function (row) {
+            const shadowChain   = renderEvoChain(row['Evolution_Shadow(CP)'], currentCP);
+            const purifiedChain = renderEvoChain(row['Evolution_Purified(CP)'], currentCP);
+            return `<div class="evo-stack">
+              <div class="evo-row shadow-evo">${shadowChain}</div>
+              <div class="evo-row purified-evo">${purifiedChain}</div>
+            </div>`;
+          }
+        },
+        // 9: Collected Shadow
+        { data: 'Collected_Shadow' },
+        // 10: Collected Purified
+        { data: 'Collected_Purified' },
+      ],
+      columnDefs: [
+        { targets: '_all', orderable: false },
+        // Collected columns
+        {
+          targets: [9, 10],
+          createdCell: function (td, cellData) {
+            const val = (cellData || '').trim().toUpperCase();
+            $(td).addClass(val === 'YES' ? 'collected-yes' : 'collected-no');
+          }
+        },
+      ],
+      rowCallback: function (row, rowData) {
+        $(row).addClass('shadow-row');
+      },
+      pageLength: 50,
+      lengthMenu: [25, 50, 100, 200, 500],
+      dom: '<"dt-top"lf>rt<"dt-bottom"ip>',
+      autoWidth: false,
+      language: {
+        search: 'Quick Search:',
+        lengthMenu: 'Show _MENU_',
+        info: 'Showing _START_–_END_ of _TOTAL_ entries',
+        paginate: { previous: '‹', next: '›' },
+      },
+    });
+
+    bindShadowFilters();
+    bindShadowAutocomplete();
+  }
+
+  function ivStackCell(shadowVal, purifiedVal, _type) {
+    const sc = ivClass(shadowVal);
+    const pc = ivClass(purifiedVal);
+    return `<div class="iv-stack">
+      <div class="iv-row shadow-iv ${sc}">${shadowVal}</div>
+      <div class="iv-row purified-iv ${pc}">${purifiedVal}</div>
+    </div>`;
+  }
+
+  function bindShadowFilters() {
+    if (!shadowTable) return;
+
+    // Pokemon name
+    $('#sf-pokemon').off('keyup change').on('keyup change', function () {
+      shadowTable.column(0).search(this.value).draw();
+    });
+    // Level
+    $('#sf-level').off('change').on('change', function () {
+      shadowTable.column(1).search(this.value ? '^' + escapeRegex(this.value) + '$' : '', true, false).draw();
+    });
+    // Purified IVs use hidden columns (5,6,7) — column search works fine here
+    [
+      ['sf-patk', 5],
+      ['sf-pdef', 6],
+      ['sf-php',  7],
+    ].forEach(([id, colIdx]) => {
+      $('#' + id).off('change').on('change', function () {
+        shadowTable.column(colIdx).search(this.value ? '^' + this.value + '$' : '', true, false).draw();
+      });
+    });
+
+    // Evo chain text search (col 8)
+    $('#sf-evo').off('keyup change').on('keyup change', function () {
+      shadowTable.column(8).search(this.value).draw();
+    });
+    // Collected Shadow (col 9)
+    $('#sf-cshadow').off('change').on('change', function () {
+      shadowTable.column(9).search(this.value ? '^' + escapeRegex(this.value) + '$' : '', true, false).draw();
+    });
+    // Collected Purified (col 10)
+    $('#sf-cpurified').off('change').on('change', function () {
+      shadowTable.column(10).search(this.value ? '^' + escapeRegex(this.value) + '$' : '', true, false).draw();
+    });
+  }
+
+  function getColIndex(colName) {
+    // Map data column names to their index in shadowTable columns definition
+    const map = {
+      'Shadow_ATK_IV': 2,    // rendered in col 2 but also need raw search
+      'Shadow_DEF_IV': 3,
+      'Shadow_HP_IV':  4,
+      'Purified_ATK_IV': 5,
+      'Purified_DEF_IV': 6,
+      'Purified_HP_IV':  7,
+    };
+    // For shadow IVs (cols 2-4), the rendered HTML contains the value but regex won't match cleanly.
+    // We use hidden columns 5,6,7 for purified. For shadow, we need custom search.
+    return map[colName] !== undefined ? map[colName] : -1;
+  }
+
+  function bindShadowAutocomplete() {
+    if (!shadowTable) return;
+    const names = [...new Set(shadowTable.column(0).data().toArray().filter(v => v))].sort();
+    const $input = $('#sf-pokemon');
+    if ($input.data('ui-autocomplete')) $input.autocomplete('destroy');
+    $input.autocomplete({
+      source: function (req, resp) {
+        const term = req.term.toLowerCase();
+        resp(names.filter(v => v.toLowerCase().includes(term)).slice(0, 20));
+      },
+      minLength: 1, delay: 0,
+      select: function (event, ui) { shadowTable.column(0).search(ui.item.value).draw(); },
+    });
+  }
+
+  // For shadow IV columns 2-4, we need custom search since they contain HTML.
+  // Register custom search functions.
+  let shadowIVSearchFns = [];
+
+  function registerShadowIVSearch() {
+    // Remove old ones
+    shadowIVSearchFns.forEach(fn => {
+      $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter(f => f !== fn);
+    });
+    shadowIVSearchFns = [];
+
+    const filters = {
+      'sf-satk': 'Shadow_ATK_IV',
+      'sf-sdef': 'Shadow_DEF_IV',
+      'sf-shp':  'Shadow_HP_IV',
     };
 
-    $.fn.dataTable.ext.search.push(shadowSearchFn);
-
-    // Force Collected → All when shadow mode is on
-    $('#collected-filter').val('');
-    dtTable.column(6).search('').draw();
+    Object.entries(filters).forEach(([id, field]) => {
+      const fn = function (settings, _data, _idx, rowData) {
+        if (settings.nTable !== document.getElementById('shadow-table')) return true;
+        const val = $('#' + id).val();
+        if (!val) return true;
+        return String(rowData[field]).trim() === String(val).trim();
+      };
+      $.fn.dataTable.ext.search.push(fn);
+      shadowIVSearchFns.push(fn);
+    });
   }
-
-  function removeShadowFilter() {
-    if (!dtTable) return;
-    if (shadowSearchFn) {
-      $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter(fn => fn !== shadowSearchFn);
-      shadowSearchFn = null;
-    }
-    dtTable.draw();
-  }
-
-  $('#shadow-purified-toggle').on('change', function () {
-    showShadowPurified = this.checked;
-    if (showShadowPurified) {
-      applyShadowFilter();
-    } else {
-      removeShadowFilter();
-    }
-  });
 
   // ─── Clear Filters ─────────────────────────────────────────────────────────
 
   $('#clear-filters').on('click', function () {
-    if (!dtTable) return;
-
-    // Clear all filter inputs
-    $('#evo-table thead tr#filter-row input').val('');
-    $('#evo-table thead tr#filter-row select').val('');
-
-    // Clear DataTable searches
-    dtTable.columns().search('');
-
-    // Reapply shadow filter if on
-    if (showShadowPurified) {
-      applyShadowFilter();
+    if (currentMode === 'normal') {
+      if (!dtTable) return;
+      $('#evo-table thead tr#filter-row input').val('');
+      $('#evo-table thead tr#filter-row select').val('');
+      dtTable.columns().search('').draw();
+    } else {
+      if (!shadowTable) return;
+      $('#shadow-filter-inputs input').val('');
+      $('#shadow-filter-inputs select').val('');
+      shadowTable.columns().search('').draw();
     }
-
-    // Reapply collected toggle
   });
 
-  // ─── CP Loader ─────────────────────────────────────────────────────────────
+  // ─── CSV Loaders ───────────────────────────────────────────────────────────
 
   function loadCP(cp) {
     const cpNum = parseInt(cp, 10);
@@ -339,9 +422,11 @@ $(document).ready(function () {
     }
 
     currentCP = cpNum;
+    rawShadowData = []; // reset shadow data so it reloads
+
     const csvUrl = `./output/cp${cpNum}/cp${cpNum}_all_evolutions.csv`;
 
-    $('#table-card').hide();
+    $('#table-card-normal, #table-card-shadow').hide();
     $('#error-state').hide();
     $('#loading-state').show();
 
@@ -351,7 +436,6 @@ $(document).ready(function () {
       skipEmptyLines: true,
       complete: function (results) {
         $('#loading-state').hide();
-
         const data = results.data.filter(row => row.Pokemon && row.Pokemon.trim());
         if (data.length === 0) {
           showError(`No data found in: ${csvUrl}`);
@@ -359,12 +443,60 @@ $(document).ready(function () {
         }
 
         document.title = `PokéCP — CP${cpNum}`;
-        $('#table-card').show();
-        initTable(data);
+
+        if (currentMode === 'normal') {
+          $('#table-card-normal').show();
+        } else {
+          $('#table-card-shadow').show();
+        }
+
+        initNormalTable(data);
+
+        // If currently in shadow mode, also load shadow CSV
+        if (currentMode === 'shadow') {
+          loadShadowCSV(cpNum);
+        }
       },
       error: function () {
         $('#loading-state').hide();
-        showError(`Could not load: <code>${csvUrl}</code><br>Make sure you have run <code>main.py --cp ${cpNum}</code> first.`);
+        showError(`Could not load: <code>${csvUrl}</code><br>Make sure you have run <code>calculate_cp.py --cp ${cpNum}</code> first.`);
+      },
+    });
+  }
+
+  function loadShadowCSV(cpNum) {
+    const csvUrl = `./output/cp${cpNum}/cp${cpNum}_shadow_purified_evolutions.csv`;
+
+    $('#table-card-shadow').hide();
+    $('#loading-state').show();
+
+    Papa.parse(csvUrl, {
+      download: true,
+      header: true,
+      skipEmptyLines: true,
+      complete: function (results) {
+        $('#loading-state').hide();
+        const data = results.data.filter(row => row.Pokemon && row.Pokemon.trim());
+        if (data.length === 0) {
+          showError(`No shadow data found in: ${csvUrl}`);
+          return;
+        }
+
+        rawShadowData = data;
+        $('#table-card-shadow').show();
+        initShadowTable(data);
+        registerShadowIVSearch();
+
+        // Re-bind shadow IV filter selects to also trigger redraw
+        ['sf-satk', 'sf-sdef', 'sf-shp'].forEach(id => {
+          $('#' + id).off('change.shadow').on('change.shadow', function () {
+            if (shadowTable) shadowTable.draw();
+          });
+        });
+      },
+      error: function () {
+        $('#loading-state').hide();
+        showError(`Could not load shadow data: <code>${csvUrl}</code><br>Make sure you have run <code>calculate_cp.py --cp ${cpNum}</code> first.`);
       },
     });
   }
@@ -372,25 +504,19 @@ $(document).ready(function () {
   function showError(msg) {
     $('#error-msg').html(msg);
     $('#error-state').show();
-    $('#table-card').hide();
+    $('#table-card-normal, #table-card-shadow').hide();
   }
 
-  // Load button
-  $('#load-cp-btn').on('click', function () {
-    loadCP($('#cp-input').val());
-  });
+  // ─── Event bindings ────────────────────────────────────────────────────────
 
-  // Enter key in CP input
+  $('#load-cp-btn').on('click', function () { loadCP($('#cp-input').val()); });
+
   $('#cp-input').on('keydown', function (e) {
     if (e.key === 'Enter') loadCP(this.value);
   });
 
-  // Allow Ctrl+A in filter inputs
   $(document).on('keydown', 'input', function (e) {
-    if (e.ctrlKey && e.key === 'a') {
-      e.preventDefault();
-      this.select();
-    }
+    if (e.ctrlKey && e.key === 'a') { e.preventDefault(); this.select(); }
   });
 
   // ─── Initial load ───────────────────────────────────────────────────────────
