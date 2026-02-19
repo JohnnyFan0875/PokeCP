@@ -36,3 +36,6 @@ OUTPUT_CP_IV_FOLDER = os.path.join(OUTPUT_CP_DIR, 'pokemon_iv')
 
 # Master evolution + IV combined CSV (loaded by index.html)
 OUTPUT_ALL_FILE = os.path.join(OUTPUT_CP_DIR, 'cp{cp}_all_evolutions.csv')
+
+# Shadow and purified information
+OUTPUT_SHADOW_PURIFIED_FILE = os.path.join(OUTPUT_CP_DIR, 'cp{cp}_shadow_purified_evolutions.csv')
