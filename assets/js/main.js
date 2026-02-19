@@ -117,11 +117,29 @@ $(document).ready(function () {
         { data: 'IV_Attack' },
         { data: 'IV_Defense' },
         { data: 'IV_HP' },
-        { data: 'Evolution(CP)' },
+        {
+          data: 'Evolution(CP)',
+          render: function (data) {
+            if (!data) return '';
+            // Split chain by ' → ' separator visually, data stored with '-'
+            const parts = data.split('-');
+            return parts.map(part => {
+              // Each part is like "Butterfree(520)"
+              const match = part.match(/^(.+)\((\d+)\)$/);
+              if (!match) return `<span class="evo-part">${part}</span>`;
+              const name = match[1];
+              const cp   = parseInt(match[2], 10);
+              const cls  = (cp === currentCP) ? 'evo-part evo-target' : 'evo-part';
+              return `<span class="${cls}">${name}<span class="evo-cp">(${cp})</span></span>`;
+            }).join('<span class="evo-arrow"> → </span>');
+          }
+        },
         { data: 'Collected' },
       ],
       columnDefs: [
-        // IV columns: add class based on value
+        // Disable sorting on ALL columns
+        { targets: '_all', orderable: false },
+        // IV columns: color class
         {
           targets: [2, 3, 4],
           createdCell: function (td, cellData) {
@@ -138,12 +156,11 @@ $(document).ready(function () {
         },
       ],
       rowCallback: function (row, rowData, rowIndex) {
-        // Mark shadow-eligible rows
         if (shadowSet.has(rowIndex)) {
           $(row).addClass('shadow-eligible-source');
         }
       },
-      order: [[0, 'asc']],
+      order: [[0, 'asc'], [2, 'asc'], [3, 'asc'], [4, 'asc']],
       pageLength: 100,
       lengthMenu: [25, 50, 100, 200, 500],
       dom: '<"dt-top"lf>rt<"dt-bottom"ip>',
@@ -166,7 +183,6 @@ $(document).ready(function () {
 
     bindColumnFilters();
     bindAutocomplete();
-    reapplyCollectedToggle();
   }
 
   // ─── Column filter bindings ────────────────────────────────────────────────
@@ -238,22 +254,7 @@ $(document).ready(function () {
     });
   }
 
-  // ─── Collected toggle ──────────────────────────────────────────────────────
-
-  function reapplyCollectedToggle() {
-    if (!dtTable) return;
-    const showAll = $('#collected-toggle').prop('checked');
-    if (!showAll) {
-      // Show non-collected only
-      $('#collected-filter').val('NO');
-      dtTable.column(6).search('^NO$', true, false).draw();
-    } else {
-      $('#collected-filter').val('');
-      dtTable.column(6).search('').draw();
-    }
-  }
-
-  $('#collected-toggle').on('change', reapplyCollectedToggle);
+  // (Collected toggle removed - use #collected-filter dropdown)
 
   // ─── Shadow Purified filter ────────────────────────────────────────────────
 
@@ -268,21 +269,26 @@ $(document).ready(function () {
 
   function applyShadowFilter() {
     if (!dtTable) return;
-    // Remove old custom search if any
     if (shadowSearchFn) {
       $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter(fn => fn !== shadowSearchFn);
     }
 
     shadowSearchFn = function (settings, data) {
       if (settings.nTable !== document.getElementById('evo-table')) return true;
-      const atk = parseInt(data[2], 10);
-      const def = parseInt(data[3], 10);
-      const hp  = parseInt(data[4], 10);
-      return atk >= 2 && def >= 2 && hp >= 2;
+      const atk   = parseInt(data[2], 10);
+      const def   = parseInt(data[3], 10);
+      const hp    = parseInt(data[4], 10);
+      const level = parseFloat((data[1] || '').replace('LV', ''));
+      // Shadow IVs (before purify) must be >= 0 → purified IVs >= 2
+      // Shadow Pokémon are capped at LV25 before purification
+      return atk >= 2 && def >= 2 && hp >= 2 && level >= 25;
     };
 
     $.fn.dataTable.ext.search.push(shadowSearchFn);
-    dtTable.draw();
+
+    // Force Collected → All when shadow mode is on
+    $('#collected-filter').val('');
+    dtTable.column(6).search('').draw();
   }
 
   function removeShadowFilter() {
@@ -321,7 +327,6 @@ $(document).ready(function () {
     }
 
     // Reapply collected toggle
-    reapplyCollectedToggle();
   });
 
   // ─── CP Loader ─────────────────────────────────────────────────────────────
