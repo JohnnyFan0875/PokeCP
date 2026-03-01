@@ -1,6 +1,6 @@
 # 🎮 PokéCP — Evolution Calculator for Pokémon GO
 
-> Quickly find which Pokémon at a specific CP have the best IVs across their entire evolution chain — including Shadow & Purified forms!
+> Quickly find which Pokémon at a specific CP have the best IVs across their entire evolution chain!
 
 🌐 **Live Website:** [https://johnnyfan0875.github.io/PokeCP/](https://johnnyfan0875.github.io/PokeCP/)
 
@@ -25,7 +25,6 @@ It also supports **Shadow and Purified** Pokémon, which have different IV modif
 
 - 🔍 **Evolution Chain Preview** — See the full CP chain from base form all the way to final evolution
 - 📊 **IV Breakdown** — Attack, Defense, and HP IVs displayed for every match
-- 👻 **Shadow & Purified Mode** — Toggle between Normal and Shadow/Purified views with adjusted IVs
 - ✅ **Collection Tracker** — Mark Pokémon as collected so you know what you still need
 - 🔎 **Powerful Filters** — Filter by Pokémon name, level, individual IVs, and collection status
 - 🕸️ **Auto Stat Scraping** — Base stats are automatically fetched from Bulbapedia and cached daily
@@ -120,15 +119,3 @@ PokeCP/
 │   └── js/main.js
 └── index.html                  # The web UI
 ```
-
----
-
-## 🤝 Contributing
-
-Found a bug or want to add a feature? Feel free to open an issue or submit a pull request!
-
----
-
-## 📜 License
-
-This project is for personal and educational use. Pokémon GO is a trademark of Niantic, Inc. and The Pokémon Company.
