@@ -72,6 +72,7 @@ $(document).ready(function () {
     dtTable = $('#evo-table').DataTable({
       data: data,
       deferRender: true,
+      order: [[2, 'asc'], [3, 'asc'], [4, 'asc']],
       columns: [
         { data: 'Pokemon' },
         { data: 'Level' },
