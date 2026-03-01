@@ -16,8 +16,6 @@
   --text-muted: #8892b0;
   --success: #37b24d;
   --danger: #e03131;
-  --shadow-color: #7048e8;
-  --purified-color: #f0a500;
   --radius: 12px;
   --radius-sm: 8px;
   --font-main: 'Exo 2', sans-serif;
@@ -59,7 +57,7 @@ body {
 }
 
 .header-inner {
-  max-width: 1800px;
+  max-width: 90%;
   margin: 0 auto;
   padding: 0.75em 1.5em;
   display: flex;
@@ -76,7 +74,7 @@ body {
 }
 
 .pokeball-icon {
-  font-size: 1.4em;
+  font-size: 2em;
   color: var(--accent3);
   text-shadow: 0 0 12px var(--accent3);
   animation: pulse 2s ease-in-out infinite;
@@ -95,7 +93,7 @@ body {
 }
 
 .header-title h1 {
-  font-size: 1.6em;
+  font-size: 2em;
   font-weight: 900;
   color: var(--accent);
   letter-spacing: -0.02em;
@@ -103,7 +101,7 @@ body {
 }
 
 .header-sub {
-  font-size: 0.75em;
+  font-size: 1em;
   color: var(--text-muted);
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -122,7 +120,7 @@ body {
 }
 
 .cp-control label {
-  font-size: 0.85em;
+  font-size: 1.2em;
   font-weight: 700;
   color: var(--text-muted);
   text-transform: uppercase;
@@ -142,7 +140,7 @@ body {
   border-radius: var(--radius-sm);
   color: var(--text);
   font-family: var(--font-mono);
-  font-size: 1.1em;
+  font-size: 1.2em;
   font-weight: 700;
   padding: 0.4em 0.6em;
   text-align: center;
@@ -156,86 +154,12 @@ body {
 }
 
 /* =========================================
-   Mode Toggle
-   ========================================= */
-.mode-toggle-wrap {
-  display: flex;
-  gap: 0;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
-.mode-btn {
-  font-family: var(--font-main);
-  font-weight: 700;
-  font-size: 0.88em;
-  border: none;
-  padding: 0.5em 1.2em;
-  cursor: pointer;
-  transition: all var(--transition);
-  white-space: nowrap;
-  background: var(--bg);
-  color: var(--text-muted);
-  display: flex;
-  align-items: center;
-  gap: 0.4em;
-}
-
-.mode-btn:first-child {
-  border-right: 1px solid var(--border);
-}
-
-.mode-btn .mode-icon {
-  font-size: 1em;
-}
-
-.mode-btn.active[data-mode="normal"] {
-  background: rgba(255, 203, 5, 0.15);
-  color: var(--accent);
-  border-color: var(--accent);
-}
-
-.mode-btn.active[data-mode="shadow"] {
-  background: rgba(112, 72, 232, 0.2);
-  color: #a992f5;
-  border-color: var(--shadow-color);
-}
-
-.mode-btn:not(.active):hover {
-  background: var(--surface2);
-  color: var(--text);
-}
-
-/* Mode badge */
-.mode-badge {
-  font-size: 0.82em;
-  font-weight: 700;
-  padding: 0.3em 0.9em;
-  border-radius: 100px;
-  letter-spacing: 0.04em;
-}
-
-.mode-badge-normal {
-  background: rgba(255, 203, 5, 0.12);
-  color: var(--accent);
-  border: 1px solid rgba(255, 203, 5, 0.3);
-}
-
-.mode-badge-shadow {
-  background: rgba(112, 72, 232, 0.15);
-  color: #a992f5;
-  border: 1px solid rgba(112, 72, 232, 0.4);
-}
-
-/* =========================================
    Buttons
    ========================================= */
 .btn {
   font-family: var(--font-main);
   font-weight: 700;
-  font-size: 0.88em;
+  font-size: 1.2em;
   border: none;
   border-radius: var(--radius-sm);
   padding: 0.5em 1.1em;
@@ -265,7 +189,7 @@ body {
   border: none;
   padding: 0.4em 1em;
   cursor: pointer;
-  font-size: 0.9em;
+  font-size: 1.2em;
   transition: all var(--transition);
 }
 
@@ -278,7 +202,7 @@ body {
    Main Content
    ========================================= */
 .main-content {
-  max-width: 1800px;
+  max-width: 90%;
   margin: 0 auto;
   padding: 1em 0.75em 3em;
 }
@@ -362,16 +286,14 @@ body {
 /* =========================================
    DataTable Overrides (Dark Theme)
    ========================================= */
-table#evo-table,
-table#shadow-table {
+table#evo-table {
   width: 100% !important;
   border-collapse: collapse;
-  font-size: 1em;
+  font-size: 1.4em;
 }
 
 /* Header rows */
-table#evo-table thead tr:first-child th,
-table#shadow-table thead tr:first-child th {
+table#evo-table thead tr:first-child th {
   background: var(--surface2);
   color: var(--accent);
   font-weight: 700;
@@ -383,41 +305,8 @@ table#shadow-table thead tr:first-child th {
   white-space: nowrap;
 }
 
-/* Shadow table group headers */
-table#shadow-table th.iv-group-header {
-  text-align: center;
-  font-size: 0.8em;
-  padding: 0.6em 0.5em;
-}
-
-table#shadow-table th.shadow-header {
-  background: rgba(112, 72, 232, 0.2) !important;
-  color: #a992f5 !important;
-  border-bottom: 2px solid var(--shadow-color) !important;
-}
-
-table#shadow-table th.purified-header {
-  background: rgba(240, 165, 0, 0.15) !important;
-  color: var(--purified-color) !important;
-  border-bottom: 2px solid var(--purified-color) !important;
-}
-
-/* Shadow sub-header row (ATK/DEF/HP labels) */
-table#shadow-table thead tr#shadow-filter-row th {
-  background: var(--surface2);
-  color: var(--text-muted);
-  font-size: 0.75em;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  padding: 0.5em 0.6em;
-  text-align: center;
-  border-bottom: 1px solid var(--border);
-}
-
 /* Filter inputs row */
-table#evo-table thead tr#filter-row th,
-table#shadow-table thead tr#shadow-filter-inputs th {
+table#evo-table thead tr#filter-row th {
   background: var(--surface);
   border-bottom: 1px solid var(--border);
   padding: 0.5em 0.5em;
@@ -448,14 +337,12 @@ select.col-filter {
 }
 
 /* Table body */
-table#evo-table tbody tr,
-table#shadow-table tbody tr {
+table#evo-table tbody tr {
   border-bottom: 1px solid var(--border);
   transition: background var(--transition);
 }
 
-table#evo-table tbody tr:hover,
-table#shadow-table tbody tr:hover {
+table#evo-table tbody tr:hover {
   background: var(--surface2) !important;
 }
 
@@ -467,8 +354,7 @@ table#evo-table tbody tr.even {
   background: rgba(255, 255, 255, 0.02);
 }
 
-table#evo-table tbody td,
-table#shadow-table tbody td {
+table#evo-table tbody td {
   padding: 0.6em 1em;
   color: var(--text);
   vertical-align: middle;
@@ -494,81 +380,7 @@ table#evo-table td:nth-child(6) {
   white-space: normal;
 }
 
-/* Shadow table column specifics */
-table#shadow-table td:nth-child(2) {
-  font-family: var(--font-mono);
-  color: var(--accent);
-}
-
-/* ─── Shadow table: IV stacked cells ─── */
-.iv-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  align-items: flex-start;
-}
-
-.iv-row {
-  font-family: var(--font-mono);
-  font-weight: 700;
-  font-size: 0.9em;
-  padding: 0.15em 0.5em;
-  border-radius: 4px;
-  min-width: 2.5em;
-  text-align: center;
-  line-height: 1.4;
-}
-
-.iv-row.shadow-iv {
-  background: rgba(112, 72, 232, 0.15);
-  border: 1px solid rgba(112, 72, 232, 0.3);
-}
-
-.iv-row.purified-iv {
-  background: rgba(240, 165, 0, 0.12);
-  border: 1px solid rgba(240, 165, 0, 0.3);
-}
-
-/* ─── Shadow table: Evolution chain stacked ─── */
-.evo-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.evo-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.4em;
-  font-family: var(--font-mono);
-  font-size: 0.88em;
-  flex-wrap: wrap;
-}
-
-.evo-label {
-  font-size: 0.85em;
-  flex-shrink: 0;
-  width: 1.4em;
-  text-align: center;
-}
-
-.shadow-label {
-  filter: drop-shadow(0 0 4px rgba(112, 72, 232, 0.6));
-}
-
-.purified-label {
-  filter: drop-shadow(0 0 4px rgba(240, 165, 0, 0.5));
-}
-
-.shadow-evo .evo-part {
-  color: #c0b0f5;
-}
-
-.purified-evo .evo-part {
-  color: #e8c97a;
-}
-
-/* IV value coloring (shared) */
+/* IV value coloring */
 .iv-0 {
   color: var(--text-muted);
 }
@@ -612,7 +424,7 @@ table#evo-table td.iv-0 {
   color: var(--text-muted);
 }
 
-/* Evolution chain shared */
+/* Evolution chain */
 .evo-part {
   color: var(--text-muted);
   white-space: nowrap;
@@ -641,36 +453,12 @@ table#evo-table td.iv-0 {
   opacity: 1;
 }
 
-/* Collected column */
-table#evo-table td:nth-child(7),
-table#shadow-table td:nth-child(10),
-table#shadow-table td:nth-child(11) {
-  font-weight: 700;
-}
-
 td.collected-yes {
   color: var(--success);
 }
 
 td.collected-no {
   color: var(--text-muted);
-}
-
-/* Shadow table rows */
-table#shadow-table tbody tr.shadow-row {
-  border-left: 3px solid rgba(112, 72, 232, 0.4);
-}
-
-table#shadow-table tbody tr.shadow-row:hover {
-  border-left-color: var(--shadow-color);
-}
-
-table#shadow-table tbody tr.odd {
-  background: var(--surface);
-}
-
-table#shadow-table tbody tr.even {
-  background: rgba(255, 255, 255, 0.02);
 }
 
 /* =========================================
@@ -680,7 +468,7 @@ table#shadow-table tbody tr.even {
 .dataTables_wrapper .dataTables_length,
 .dataTables_wrapper .dataTables_filter {
   color: var(--text-muted);
-  font-size: 0.85em;
+  font-size: 1em;
   padding: 0.75em 1em;
 }
 
@@ -755,14 +543,11 @@ table#shadow-table tbody tr.even {
 
 /* Hide DataTables sort arrows */
 table#evo-table thead th::after,
-table#evo-table thead th::before,
-table#shadow-table thead th::after,
-table#shadow-table thead th::before {
+table#evo-table thead th::before {
   display: none !important;
 }
 
-table#evo-table thead th,
-table#shadow-table thead th {
+table#evo-table thead th {
   cursor: default !important;
 }
 
@@ -815,18 +600,6 @@ table#shadow-table thead th {
     padding: 0.75em 0.75em 3em;
   }
 
-  .mode-toggle-wrap {
-    order: 3;
-    width: 100%;
-  }
-
-  .mode-btn {
-    flex: 1;
-    justify-content: center;
-    font-size: 0.8em;
-    padding: 0.5em 0.5em;
-  }
-
   .controls-bar {
     flex-direction: column;
     align-items: flex-start;
@@ -837,15 +610,13 @@ table#shadow-table thead th {
     width: 100%;
   }
 
-  table#evo-table thead tr:first-child th,
-  table#shadow-table thead tr:first-child th {
+  table#evo-table thead tr:first-child th {
     padding: 0.7em 0.5em;
     font-size: 0.75em;
     white-space: nowrap;
   }
 
-  table#evo-table tbody td,
-  table#shadow-table tbody td {
+  table#evo-table tbody td {
     padding: 0.5em 0.5em;
     font-size: 0.82em;
   }
@@ -858,23 +629,6 @@ table#shadow-table thead th {
   .col-filter {
     font-size: 0.8em;
     padding: 0.3em 0.3em;
-  }
-
-  .iv-stack {
-    gap: 2px;
-  }
-
-  .iv-row {
-    font-size: 0.8em;
-    padding: 0.1em 0.3em;
-  }
-
-  .evo-stack {
-    gap: 4px;
-  }
-
-  .evo-row {
-    font-size: 0.75em;
   }
 }
 

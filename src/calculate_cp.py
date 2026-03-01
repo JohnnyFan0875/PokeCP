@@ -2,7 +2,7 @@
 calculate_cp.py
 
 Calculates evolution CP tables for Pokémon GO.
-Always generates both normal and shadow evolution CSVs.
+Generates a single all_evolutions CSV including Collected_Shadow and Collected_Purified columns.
 
 Usage:
     python calculate_cp.py --cp 520
@@ -19,7 +19,7 @@ import pandas as pd
 from config import (
     BASESTAT_CSV, EVOLUTION_CSV, MULTIPLIER_CSV,
     COLLECTED_CSV, OUTPUT_CP_IV_FOLDER,
-    OUTPUT_ALL_FILE, OUTPUT_SHADOW_PURIFIED_FILE,
+    OUTPUT_ALL_FILE,
 )
 
 
@@ -122,10 +122,6 @@ def calc_cp(base_atk, base_def, base_hp, iv_atk, iv_def, iv_hp, cpm):
     return int(cp)
 
 
-def purified_ivs(iv_atk, iv_def, iv_hp):
-    return min(iv_atk + 2, 15), min(iv_def + 2, 15), min(iv_hp + 2, 15)
-
-
 # ─── Per-Pokemon CP/IV file ───────────────────────────────────────────────────
 
 def create_cp_iv_file(name, base_atk, base_def, base_hp, multipliers, cp_val, output_folder):
@@ -163,32 +159,22 @@ def create_all_cp_iv_files(df_stat, multipliers, cp_val):
 def create_evolution_csv(df_stat, evo_chains, multipliers, cp_val):
     """
     cp{N}_all_evolutions.csv
-    Columns: Pokemon, CP, Level, IV_Attack, IV_Defense, IV_HP, Evolution(CP), Collected, Collected_Shadow, Collected_Purified
+    Columns: Pokemon, CP, Level, IV_Attack, IV_Defense, IV_HP,
+             Evolution(CP), Collected, Collected_Shadow, Collected_Purified
     """
     collected = load_collected(cp_val)
     stat_lookup = {row['Pokemon']: row for _, row in df_stat.iterrows()}
     iv_folder = OUTPUT_CP_IV_FOLDER.format(cp=cp_val)
     output_all_path = OUTPUT_ALL_FILE.format(cp=cp_val)
-    output_s_p_path = OUTPUT_SHADOW_PURIFIED_FILE.format(cp=cp_val)
 
-    print(f"[INFO] Building evolution CSV -> \n {output_all_path} \n {output_s_p_path}")
+    print(f"[INFO] Building evolution CSV -> {output_all_path}")
 
-    seen_rows_a = set()
-    seen_rows_s_p = set()
+    seen_rows = set()
 
-    with open(output_all_path, 'w', encoding='utf-8', newline='') as f_all_out, \
-         open(output_s_p_path, 'w', encoding='utf-8', newline='') as f_s_p_out:
-        
-        writer_all = csv.writer(f_all_out)
-        writer_all.writerow(['Pokemon', 'CP', 'Level', 'IV_Attack', 'IV_Defense', 'IV_HP',
-                         'Evolution(CP)', 'Collected'])
-        
-        writer_s_p = csv.writer(f_s_p_out)
-        writer_s_p.writerow(['Pokemon', 'CP', 'Level',
-            'Shadow_ATK_IV', 'Shadow_DEF_IV', 'Shadow_HP_IV',
-            'Purified_ATK_IV', 'Purified_DEF_IV', 'Purified_HP_IV',
-            'Evolution_Shadow(CP)', 'Evolution_Purified(CP)',
-            'Collected_Shadow', 'Collected_Purified',])
+    with open(output_all_path, 'w', encoding='utf-8', newline='') as f_out:
+        writer = csv.writer(f_out)
+        writer.writerow(['Pokemon', 'CP', 'Level', 'IV_Attack', 'IV_Defense', 'IV_HP',
+                         'Evolution(CP)', 'Collected', 'Collected_Shadow', 'Collected_Purified'])
 
         for poke_name in df_stat['Pokemon']:
             iv_file = os.path.join(iv_folder, f"cp{cp_val}_{poke_name}.csv")
@@ -211,7 +197,6 @@ def create_evolution_csv(df_stat, evo_chains, multipliers, cp_val):
                 cp_int = int(iv_row['CP'])
                 cpm    = float(multipliers[level.replace('LV', '')])
 
-                # All evolution
                 for chain in chains:
                     evo_parts = []
                     for evo_name in chain:
@@ -224,47 +209,14 @@ def create_evolution_csv(df_stat, evo_chains, multipliers, cp_val):
 
                     evo_chain_str = '-'.join(evo_parts)
                     dedup_key = (poke_name, level, iv_a, iv_d, iv_h, evo_chain_str)
-                    if dedup_key in seen_rows_a:
+                    if dedup_key in seen_rows:
                         continue
-                    seen_rows_a.add(dedup_key)
+                    seen_rows.add(dedup_key)
 
-                    writer_all.writerow([poke_name, cp_int, level, iv_a, iv_d, iv_h,
-                                     evo_chain_str, coll_val])
-                    
-                # Shadow and purified evolution
-                # Filter: must be Level >= 25 and all IVs >= 2
-                if float(level.replace('LV', '')) < 25:
-                    continue
-                if iv_a < 2 or iv_d < 2 or iv_h < 2:
-                    continue
+                    writer.writerow([poke_name, cp_int, level, iv_a, iv_d, iv_h,
+                                     evo_chain_str, coll_val, coll_s_val, coll_p_val])
 
-                iv_s_a, iv_s_d, iv_s_h = iv_a - 2, iv_d - 2, iv_h - 2
-                iv_p_a, iv_p_d, iv_p_h = iv_a, iv_d, iv_h
-
-                for chain in chains:
-                    # Shadow pokemon
-                    evo_s_parts = []
-                    for evo_name in chain:
-                        if evo_name not in stat_lookup:
-                            continue
-                        er = stat_lookup[evo_name]
-                        evo_s_cp = calc_cp(int(er['Attack']), int(er['Defense']), int(er['HP']),
-                                         iv_s_a, iv_s_d, iv_s_h, cpm)
-                        evo_s_parts.append(f"{evo_name}({evo_s_cp})")
-
-                    evo_chain_s_str = '-'.join(evo_s_parts)
-                    dedup_key = (poke_name, level, iv_s_a, iv_s_d, iv_s_h, evo_chain_s_str)
-                    if dedup_key in seen_rows_s_p:
-                        continue
-                    seen_rows_s_p.add(dedup_key)
-
-                    # Purified pokemon - equal to normal, skip calculation
-
-                    writer_s_p.writerow([poke_name, cp_int, level, iv_s_a, iv_s_d, iv_s_h, iv_p_a, iv_p_d, iv_p_h,
-                                     evo_chain_s_str, evo_chain_str, coll_s_val, coll_p_val])
-
-
-    print(f"[INFO] Evolution CSV complete: \n {output_all_path} \n {output_s_p_path}")
+    print(f"[INFO] Evolution CSV complete: {output_all_path}")
 
 
 if __name__ == '__main__':

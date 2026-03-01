@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,7 +11,8 @@
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;900&family=Share+Tech+Mono&display=swap"
+    rel="stylesheet" />
 
   <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -24,6 +26,7 @@
 
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
+
 <body>
 
   <header class="site-header">
@@ -42,16 +45,6 @@
           <button id="load-cp-btn">Load</button>
         </div>
       </div>
-
-      <!-- Mode Toggle -->
-      <div class="mode-toggle-wrap">
-        <button class="mode-btn active" id="mode-normal" data-mode="normal">
-          Normal
-        </button>
-        <button class="mode-btn" id="mode-shadow" data-mode="shadow">
-          Shadow/Purified
-        </button>
-      </div>
     </div>
   </header>
 
@@ -61,10 +54,6 @@
     <div class="controls-bar">
       <div class="controls-left">
         <button id="clear-filters" class="btn btn-secondary">✕ Clear Filters</button>
-      </div>
-      <div class="controls-right">
-        <!-- Mode badge -->
-        <div id="mode-badge" class="mode-badge mode-badge-normal">⚡ Normal Mode</div>
       </div>
     </div>
 
@@ -79,7 +68,7 @@
       <p id="error-msg">Could not load CSV file.</p>
     </div>
 
-    <!-- NORMAL TABLE -->
+    <!-- MAIN TABLE -->
     <div class="table-card" id="table-card-normal">
       <div class="table-responsive">
         <table id="evo-table" class="display" style="width:100%">
@@ -92,6 +81,8 @@
               <th>HP IV</th>
               <th>Evolution Chain (CP)</th>
               <th>Collected</th>
+              <th>Collected Shadow</th>
+              <th>Collected Purified</th>
             </tr>
             <tr id="filter-row">
               <th><input type="text" class="col-filter" placeholder="Search…" /></th>
@@ -123,63 +114,15 @@
                   <option value="NO">NO</option>
                 </select>
               </th>
-            </tr>
-          </thead>
-        </table>
-      </div>
-    </div>
-
-    <!-- SHADOW TABLE -->
-    <div class="table-card" id="table-card-shadow" style="display:none;">
-      <div class="table-responsive">
-        <table id="shadow-table" class="display" style="width:100%">
-          <thead>
-            <tr>
-              <th>Pokemon</th>
-              <th>Level</th>
-              <th>ATK IV</th>
-              <th>DEF IV</th>
-              <th>HP IV</th>
-              <th>ATK IV</th>
-              <th>DEF IV</th>
-              <th>HP IV</th>
-              <th>Evolution Chains (CP)</th>
-              <th>Collected Shadow</th>
-              <th>Collected Purified</th>
-            </tr>
-            <tr id="shadow-filter-inputs">
-              <th><input type="text" class="col-filter" id="sf-pokemon" placeholder="Search…" /></th>
               <th>
-                <select id="sf-level" class="col-filter"><option value="">All</option></select>
-              </th>
-              <th>
-                <select id="sf-satk" class="col-filter"><option value="">All</option></select>
-              </th>
-              <th>
-                <select id="sf-sdef" class="col-filter"><option value="">All</option></select>
-              </th>
-              <th>
-                <select id="sf-shp" class="col-filter"><option value="">All</option></select>
-              </th>
-              <th>
-                <select id="sf-patk" class="col-filter"><option value="">All</option></select>
-              </th>
-              <th>
-                <select id="sf-pdef" class="col-filter"><option value="">All</option></select>
-              </th>
-              <th>
-                <select id="sf-php" class="col-filter"><option value="">All</option></select>
-              </th>
-              <th><input type="text" class="col-filter" id="sf-evo" placeholder="Search…" /></th>
-              <th>
-                <select id="sf-cshadow" class="col-filter">
+                <select id="collected-shadow-filter" class="col-filter">
                   <option value="">All</option>
                   <option value="YES">YES</option>
                   <option value="NO">NO</option>
                 </select>
               </th>
               <th>
-                <select id="sf-cpurified" class="col-filter">
+                <select id="collected-purified-filter" class="col-filter">
                   <option value="">All</option>
                   <option value="YES">YES</option>
                   <option value="NO">NO</option>
@@ -195,4 +138,5 @@
 
   <script src="assets/js/main.js"></script>
 </body>
+
 </html>
