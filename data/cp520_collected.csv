@@ -696,7 +696,7 @@ Deerling Spring Form,YES,NO,NO
 Deerling Summer Form,YES,NO,NO
 Deerling Autumn Form,YES,NO,NO
 Deerling Winter Form,YES,NO,NO
-Sawsbuck Spring Form,NO,NO,NO
+Sawsbuck Spring Form,YES,NO,NO
 Sawsbuck Summer Form,NO,NO,NO
 Sawsbuck Autumn Form,NO,NO,NO
 Sawsbuck Winter Form,NO,NO,NO
@@ -884,7 +884,7 @@ Oricorio Sensu Style,YES,NO,NO
 Cutiefly,YES,NO,NO
 Ribombee,YES,NO,NO
 Rockruff,YES,NO,NO
-Lycanroc Midday Form,NO,NO,NO
+Lycanroc Midday Form,YES,NO,NO
 Lycanroc Midnight Form,NO,NO,NO
 Lycanroc Dusk Form,NO,NO,NO
 Wishiwashi Solo Form,NO,NO,NO
@@ -1033,7 +1033,7 @@ Drakloak,NO,NO,NO
 Dragapult,NO,NO,NO
 Hatenna,YES,NO,NO
 Hattrem,YES,NO,NO
-Hatterene,NO,NO,NO
+Hatterene,YES,NO,NO
 Mawile Mega Mawile,NO,NO,NO
 Toxel,YES,NO,NO
 Toxtricity Amped Form,NO,NO,NO
@@ -1058,8 +1058,8 @@ Fidough,YES,NO,NO
 Dachsbun,NO,NO,NO
 Shroodle,NO,NO,NO
 Grafaiai,NO,NO,NO
-Tinkatink,NO,NO,NO
-Tinkatuff,NO,NO,NO
+Tinkatink,YES,NO,NO
+Tinkatuff,YES,NO,NO
 Tinkaton,NO,NO,NO
 Tauros Paldean Form Combat Breed,NO,NO,NO
 Tauros Paldean Form Blaze Breed,NO,NO,NO
@@ -1121,6 +1121,6 @@ Garganacl,NO,NO,NO
 Wattrel,YES,NO,NO
 Kilowattrel,YES,NO,NO
 Klawf,NO,NO,NO
-Glimmet,NO,NO,NO
+Glimmet,YES,NO,NO
 Glimmora,NO,NO,NO
 Flamigo,NO,NO,NO
