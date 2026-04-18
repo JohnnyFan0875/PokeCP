@@ -556,7 +556,7 @@ Magnezone,YES,NO,NO
 Lickilicky,YES,NO,NO
 Rhyperior,YES,NO,NO
 Tangrowth,YES,NO,NO
-Electivire,NO,NO,NO
+Electivire,YES,NO,NO
 Magmortar,NO,NO,NO
 Togekiss,YES,NO,NO
 Yanmega,NO,NO,NO
@@ -796,7 +796,7 @@ Floette,NO,NO,NO
 Florges,NO,NO,NO
 Skiddo,YES,NO,NO
 Gogoat,NO,NO,NO
-Pancham,NO,NO,NO
+Pancham,YES,NO,NO
 Pangoro,NO,NO,NO
 Furfrou,YES,NO,NO
 Espurr,YES,NO,NO
@@ -1080,7 +1080,7 @@ Boltund,YES,NO,NO
 Zorua Hisuian Form,YES,NO,NO
 Zoroark Hisuian Form,NO,NO,NO
 Toedscool,YES,NO,NO
-Toedscruel,NO,NO,NO
+Toedscruel,YES,NO,NO
 Lilligant Hisuian Form,NO,NO,NO
 Snom,NO,NO,NO
 Frosmoth,NO,NO,NO
