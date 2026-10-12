@@ -4,17 +4,28 @@ scraper.py
 Scrapes Pokémon GO base stats from Bulbapedia and saves to CSV.
 Skips scraping if today's file already exists (date-stamped cache).
 """
-import sys
-print(sys.executable)
 import datetime
 import os
-import re
 from io import StringIO
 
 import pandas as pd
 import requests
 
 from config import BASESTAT_CSV
+
+
+URL = (
+    'https://bulbapedia.bulbagarden.net/wiki/'
+    'List_of_Pok%C3%A9mon_by_base_stats_in_Pok%C3%A9mon_GO'
+)
+
+# Bulbapedia (behind Cloudflare) rejects the default python-requests User-Agent.
+# A descriptive UA with contact info follows Wikimedia's bot policy.
+HEADERS = {
+    'User-Agent': 'PokeCP/1.0 (personal project; contact: your-email@example.com)',
+    'Accept': 'text/html,application/xhtml+xml;q=0.9,*/*;q=0.8',
+    'Accept-Language': 'en-US,en;q=0.9',
+}
 
 
 # Name cleaning: map known Unicode escape sequences from mis-encoded scrapes
@@ -27,8 +38,9 @@ _NAME_REPLACEMENTS = {
     '♂': ' Male',
     ' Forme': ' Form',
     ' From': ' Form',
-    'é': 'e'
+    'é': 'e',
 }
+
 
 def _clean_name(name: str) -> str:
     for src, dst in _NAME_REPLACEMENTS.items():
@@ -36,6 +48,20 @@ def _clean_name(name: str) -> str:
     # Remove commas (e.g. "Mr. Mime, Galarian")
     name = name.replace(',', '')
     return name.strip()
+
+
+def _flatten_col(col) -> str:
+    """Flatten a column label, dropping the repeated header parts Bulbapedia produces.
+    ('HP', 'HP') -> 'HP'; ('Pokémon', 'Pokémon.1') -> 'Pokémon Pokémon.1'
+    """
+    if not isinstance(col, tuple):
+        return str(col).strip()
+    parts = []
+    for p in map(str, col):
+        if p.startswith('Unnamed') or (parts and p == parts[-1]):
+            continue
+        parts.append(p)
+    return ' '.join(parts).strip()
 
 
 def scrape_base_stats() -> pd.DataFrame:
@@ -52,11 +78,10 @@ def scrape_base_stats() -> pd.DataFrame:
         print(f"[INFO] Using cached base stats: {cache_path}")
         return pd.read_csv(cache_path)
 
-    url = 'https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_base_stats_(GO)'
-    print(f"[INFO] Scraping base stats from Bulbapedia…")
+    print("[INFO] Scraping base stats from Bulbapedia…")
 
     try:
-        response = requests.get(url, timeout=30)
+        response = requests.get(URL, headers=HEADERS, timeout=30)
         response.raise_for_status()
     except requests.RequestException as e:
         raise RuntimeError(f"Failed to fetch Bulbapedia: {e}") from e
@@ -70,22 +95,20 @@ def scrape_base_stats() -> pd.DataFrame:
 
     df = tables[0]
 
-    # Flatten MultiIndex columns if present
-    if isinstance(df.columns, pd.MultiIndex):
-        df.columns = [' '.join(str(c) for c in col).strip() for col in df.columns]
+    # Flatten column labels (handles MultiIndex and repeated header text)
+    df.columns = [_flatten_col(c) for c in df.columns]
 
-    # Find the columns we care about (case-insensitive, partial match)
+    # Find the columns we care about
     col_map = {}
     for col in df.columns:
         col_lower = col.lower()
-        if 'pokémon.1' in col_lower or 'pokemon.1' in col_lower:
-            if 'name' not in col_map:
-                col_map['name'] = col
-        elif col_lower.strip() == 'attack':
+        if col_lower.startswith(('pokémon', 'pokemon')) and col_lower.endswith('.1'):
+            col_map.setdefault('name', col)
+        elif col_lower == 'attack':
             col_map['Attack'] = col
-        elif col_lower.strip() == 'defense':
+        elif col_lower == 'defense':
             col_map['Defense'] = col
-        elif col_lower.strip() == 'hp':
+        elif col_lower == 'hp':
             col_map['HP'] = col
 
     missing = [k for k in ('Attack', 'Defense', 'HP') if k not in col_map]
@@ -98,9 +121,11 @@ def scrape_base_stats() -> pd.DataFrame:
     # Clean Pokémon names
     df['Pokemon'] = df['Pokemon'].astype(str).apply(_clean_name)
 
-    # Drop rows where name looks like a header or is blank
+    # Drop rows where name looks like a header or is blank.
+    # Compare against 'pokemon' (not 'pokémon') because _clean_name has already
+    # converted the accented 'é' to 'e' by this point.
     df = df[df['Pokemon'].notna() & (df['Pokemon'] != '') & (df['Pokemon'] != 'nan')]
-    df = df[df['Pokemon'].str.lower() != 'pokémon']
+    df = df[df['Pokemon'].str.lower() != 'pokemon']
 
     # Ensure numeric columns
     for col in ('Attack', 'Defense', 'HP'):

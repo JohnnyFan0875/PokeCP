@@ -8,7 +8,7 @@ Charmeleon,YES,NO,NO
 Charizard,YES,NO,NO
 Charizard Mega Charizard X,NO,NO,NO
 Charizard Mega Charizard Y,NO,NO,NO
-Squirtle,YES,NO,NO
+Squirtle,YES,YES,NO
 Wartortle,YES,YES,NO
 Blastoise,YES,NO,NO
 Blastoise Mega Blastoise,NO,NO,NO
@@ -34,6 +34,8 @@ Arbok,YES,NO,NO
 Pikachu,YES,NO,NO
 Raichu,NO,NO,NO
 Raichu Alolan Form,NO,NO,NO
+Raichu Mega Raichu X,NO,NO,NO
+Raichu Mega Raichu Y,NO,NO,NO
 Sandshrew,YES,NO,NO
 Sandshrew Alolan Form,YES,YES,NO
 Sandslash,YES,NO,NO
@@ -53,13 +55,13 @@ Ninetales Alolan Form,YES,YES,NO
 Jigglypuff,YES,NO,NO
 Wigglytuff,YES,NO,NO
 Zubat,YES,YES,YES
-Golbat,YES,NO,NO
+Golbat,YES,YES,NO
 Oddish,YES,YES,NO
 Gloom,YES,NO,NO
 Vileplume,YES,NO,NO
 Paras,YES,NO,NO
 Parasect,YES,NO,NO
-Venonat,YES,NO,NO
+Venonat,YES,YES,NO
 Venomoth,YES,NO,NO
 Diglett,YES,NO,NO
 Diglett Alolan Form,YES,YES,YES
@@ -72,7 +74,7 @@ Persian,YES,NO,NO
 Persian Alolan Form,YES,NO,NO
 Psyduck,YES,YES,NO
 Golduck,NO,NO,NO
-Mankey,YES,NO,NO
+Mankey,YES,YES,NO
 Primeape,YES,NO,NO
 Growlithe,YES,NO,NO
 Growlithe Hisuian Form,YES,NO,NO
@@ -99,7 +101,7 @@ Graveler,YES,YES,NO
 Graveler Alolan Form,YES,YES,NO
 Golem,YES,NO,NO
 Golem Alolan Form,YES,NO,NO
-Ponyta,YES,NO,NO
+Ponyta,YES,YES,NO
 Ponyta Galarian Form,YES,NO,NO
 Rapidash,YES,NO,NO
 Rapidash Galarian Form,YES,NO,NO
@@ -110,11 +112,11 @@ Slowbro Galarian Form,YES,NO,NO
 Magnemite,YES,YES,NO
 Magneton,YES,NO,NO
 Farfetch'd,YES,NO,NO
-Farfetch'd Galarian Form,NO,NO,NO
+Farfetch'd Galarian Form,YES,NO,NO
 Doduo,YES,NO,NO
 Dodrio,YES,NO,NO
 Seel,YES,NO,NO
-Dewgong,YES,NO,NO
+Dewgong,YES,YES,NO
 Grimer,YES,YES,NO
 Grimer Alolan Form,YES,YES,NO
 Muk,YES,NO,NO
@@ -127,12 +129,12 @@ Gengar,YES,NO,NO
 Gengar Mega Gengar,NO,NO,NO
 Onix,YES,YES,NO
 Drowzee,YES,NO,NO
-Hypno,YES,NO,NO
+Hypno,YES,YES,NO
 Krabby,YES,NO,NO
 Kingler,YES,NO,NO
 Voltorb,YES,YES,NO
 Voltorb Hisuian Form,YES,NO,NO
-Electrode,YES,NO,NO
+Electrode,YES,YES,NO
 Electrode Hisuian Form,YES,NO,NO
 Exeggcute,YES,NO,NO
 Exeggutor,YES,NO,NO
@@ -149,7 +151,7 @@ Weezing Galarian Form,NO,NO,NO
 Rhyhorn,YES,NO,NO
 Rhydon,YES,NO,NO
 Chansey,YES,NO,NO
-Tangela,YES,NO,NO
+Tangela,YES,YES,NO
 Kangaskhan,NO,NO,NO
 Kangaskhan Mega Kangaskhan,NO,NO,NO
 Horsea,YES,NO,NO
@@ -158,10 +160,11 @@ Goldeen,YES,NO,NO
 Seaking,YES,NO,NO
 Staryu,YES,NO,NO
 Starmie,YES,NO,NO
+Starmie Mega Starmie,NO,NO,NO
 Mr. Mime,NO,NO,NO
 Mr. Mime Galarian Form,NO,NO,NO
 Scyther,NO,NO,NO
-Jynx,NO,NO,NO
+Jynx,YES,NO,NO
 Electabuzz,YES,NO,NO
 Magmar,NO,NO,NO
 Pinsir,NO,NO,NO
@@ -191,7 +194,7 @@ Zapdos Galarian Form,NO,NO,NO
 Moltres,NO,NO,NO
 Moltres Galarian Form,NO,NO,NO
 Dratini,YES,YES,NO
-Dragonair,YES,NO,NO
+Dragonair,YES,YES,NO
 Dragonite,NO,NO,NO
 Mewtwo,NO,NO,NO
 Mewtwo Armored Mewtwo,NO,NO,NO
@@ -210,7 +213,7 @@ Croconaw,YES,NO,NO
 Feraligatr,YES,NO,NO
 Sentret,YES,NO,NO
 Furret,YES,NO,NO
-Hoothoot,NO,NO,NO
+Hoothoot,YES,YES,YES
 Noctowl,YES,NO,NO
 Ledyba,YES,YES,YES
 Ledian,YES,NO,NO
@@ -303,7 +306,7 @@ Raikou,NO,NO,NO
 Entei,NO,NO,NO
 Suicune,NO,NO,NO
 Larvitar,YES,YES,NO
-Pupitar,NO,NO,NO
+Pupitar,YES,NO,NO
 Tyranitar,NO,NO,NO
 Tyranitar Mega Tyranitar,NO,NO,NO
 Lugia,NO,NO,NO
@@ -321,7 +324,7 @@ Mudkip,YES,YES,NO
 Marshtomp,NO,YES,NO
 Swampert,YES,NO,NO
 Swampert Mega Swampert,NO,NO,NO
-Poochyena,YES,NO,NO
+Poochyena,YES,YES,YES
 Mightyena,YES,NO,NO
 Zigzagoon,YES,NO,NO
 Zigzagoon Galarian Form,YES,NO,YES
@@ -412,8 +415,8 @@ Whiscash,YES,NO,NO
 Corphish,YES,NO,NO
 Crawdaunt,YES,NO,NO
 Baltoy,YES,YES,YES
-Claydol,NO,NO,NO
-Lileep,YES,YES,NO
+Claydol,YES,NO,NO
+Lileep,NO,YES,NO
 Cradily,YES,NO,NO
 Anorith,YES,NO,NO
 Armaldo,NO,NO,NO
@@ -429,7 +432,7 @@ Banette,YES,NO,NO
 Banette Mega Banette,NO,NO,NO
 Duskull,YES,YES,YES
 Dusclops,YES,NO,NO
-Tropius,NO,NO,NO
+Tropius,YES,NO,NO
 Chimecho,YES,NO,NO
 Absol,YES,NO,NO
 Absol Mega Absol,NO,NO,NO
@@ -472,14 +475,14 @@ Deoxys Defense Form,NO,NO,NO
 Deoxys Speed Form,NO,NO,NO
 Turtwig,YES,YES,NO
 Grotle,YES,NO,NO
-Torterra,NO,NO,NO
+Torterra,YES,NO,NO
 Chimchar,YES,NO,NO
 Monferno,YES,NO,NO
 Infernape,NO,NO,NO
 Piplup,YES,YES,NO
 Prinplup,YES,NO,NO
 Empoleon,NO,NO,NO
-Starly,YES,NO,YES
+Starly,YES,YES,YES
 Staravia,YES,NO,NO
 Staraptor,YES,NO,NO
 Bidoof,YES,YES,YES
@@ -490,7 +493,7 @@ Shinx,YES,YES,NO
 Luxio,YES,NO,NO
 Luxray,NO,NO,NO
 Budew,YES,NO,NO
-Roserade,NO,NO,NO
+Roserade,YES,NO,NO
 Cranidos,YES,YES,NO
 Rampardos,YES,NO,NO
 Shieldon,YES,NO,NO
@@ -566,7 +569,7 @@ Yanmega,NO,NO,NO
 Leafeon,YES,NO,NO
 Glaceon,YES,NO,NO
 Gliscor,NO,NO,NO
-Mamoswine,NO,NO,NO
+Mamoswine,YES,NO,NO
 Porygon-Z,YES,NO,NO
 Gallade,NO,NO,NO
 Probopass,YES,NO,NO
@@ -688,7 +691,7 @@ Gothita,YES,YES,NO
 Gothorita,YES,NO,NO
 Gothitelle,YES,NO,NO
 Solosis,YES,YES,NO
-Duosion,YES,NO,NO
+Duosion,YES,YES,NO
 Reuniclus,YES,NO,NO
 Ducklett,YES,YES,NO
 Swanna,YES,NO,NO
@@ -722,15 +725,15 @@ Tynamo,YES,NO,NO
 Eelektrik,YES,NO,NO
 Eelektross,NO,NO,NO
 Elgyem,YES,NO,NO
-Beheeyem,NO,NO,NO
+Beheeyem,YES,NO,NO
 Litwick,YES,NO,NO
 Lampent,YES,NO,NO
 Chandelure,YES,NO,NO
 Axew,YES,NO,NO
-Fraxure,YES,NO,NO
+Fraxure,YES,YES,NO
 Haxorus,NO,NO,NO
 Cubchoo,YES,NO,NO
-Beartic,NO,NO,NO
+Beartic,YES,NO,NO
 Cryogonal,NO,NO,NO
 Shelmet,YES,NO,NO
 Accelgor,YES,NO,NO
@@ -752,7 +755,7 @@ Mandibuzz,NO,NO,NO
 Heatmor,YES,NO,NO
 Durant,NO,NO,NO
 Deino,YES,YES,NO
-Zweilous,YES,NO,NO
+Zweilous,YES,YES,NO
 Hydreigon,YES,NO,NO
 Larvesta,NO,NO,NO
 Volcarona,NO,NO,NO
@@ -776,7 +779,7 @@ Meloetta Aria Form,NO,NO,NO
 Meloetta Pirouette Form,NO,NO,NO
 Genesect,NO,NO,NO
 Chespin,YES,NO,NO
-Quilladin,NO,NO,NO
+Quilladin,YES,NO,NO
 Chesnaught,NO,NO,NO
 Fennekin,YES,YES,NO
 Braixen,YES,NO,NO
@@ -825,7 +828,7 @@ Helioptile,YES,NO,NO
 Heliolisk,YES,NO,NO
 Tyrunt,YES,NO,NO
 Tyrantrum,YES,NO,NO
-Amaura,YES,NO,NO
+Amaura,YES,YES,NO
 Aurorus,YES,NO,NO
 Sylveon,YES,NO,NO
 Hawlucha,NO,NO,NO
@@ -848,7 +851,7 @@ Gourgeist Jumbo Variety,YES,NO,NO
 Bergmite,YES,NO,NO
 Avalugg,YES,NO,NO
 Avalugg Hisuian Form,NO,NO,NO
-Noibat,YES,NO,NO
+Noibat,YES,NO,YES
 Noivern,YES,NO,NO
 Xerneas,NO,NO,NO
 Yveltal,NO,NO,NO
@@ -875,7 +878,7 @@ Trumbeak,YES,NO,NO
 Toucannon,YES,NO,NO
 Yungoos,YES,NO,NO
 Gumshoos,YES,NO,NO
-Grubbin,YES,NO,NO
+Grubbin,YES,YES,NO
 Charjabug,YES,NO,NO
 Vikavolt,YES,NO,NO
 Crabrawler,YES,NO,NO
@@ -917,7 +920,7 @@ Golisopod,NO,NO,NO
 Sandygast,YES,NO,NO
 Palossand,YES,NO,NO
 Pyukumuku,NO,NO,NO
-Komala,NO,NO,NO
+Komala,YES,NO,NO
 Turtonator,NO,NO,NO
 Togedemaru,YES,NO,NO
 Bruxish,NO,NO,NO
@@ -995,8 +998,8 @@ Cetitan,YES,NO,NO
 Annihilape,YES,NO,NO
 Clodsire,YES,NO,NO
 Frigibax,YES,NO,NO
-Arctibax,NO,NO,NO
-Baxcalibur,NO,NO,NO
+Arctibax,YES,NO,NO
+Baxcalibur,YES,NO,NO
 Gimmighoul Roaming Form,NO,NO,NO
 Gholdengo,NO,NO,NO
 Poipole,NO,NO,NO
@@ -1045,8 +1048,8 @@ Toxtricity Low Key Form,NO,NO,NO
 Corsola Galarian Form,NO,NO,NO
 Gallade Mega Gallade,NO,NO,NO
 Dhelmise,NO,NO,NO
-Rookidee,YES,NO,NO
-Corvisquire,YES,NO,NO
+Rookidee,YES,YES,YES
+Corvisquire,YES,YES,NO
 Corviknight,YES,NO,NO
 Nickit,YES,NO,NO
 Thievul,YES,NO,NO
@@ -1073,7 +1076,7 @@ Gossifleur,YES,NO,NO
 Eldegoss,YES,NO,NO
 Applin,YES,NO,NO
 Flapple,NO,NO,NO
-Appletun,NO,NO,NO
+Appletun,YES,NO,NO
 Sizzlipede,YES,NO,NO
 Centiskorch,YES,NO,NO
 Urshifu Single Strike Style,NO,NO,NO
@@ -1128,15 +1131,31 @@ Klawf,NO,NO,NO
 Glimmet,YES,NO,NO
 Glimmora,NO,NO,NO
 Flamigo,NO,NO,NO
-Squawkabilly Yellow Plumage,NO,NO,NO
+Squawkabilly Yellow Plumage,YES,NO,NO
 Squawkabilly Blue Plumage,NO,NO,NO
 Squawkabilly White Plumage,NO,NO,NO
 Squawkabilly Green Plumage,NO,NO,NO
 Blipbug,NO,NO,NO
 Dottler,NO,NO,NO
 Orbeetle,NO,NO,NO
-Flittle,NO,NO,NO
+Flittle,YES,NO,NO
 Espathra,NO,NO,NO
 Silicobra,NO,NO,NO
 Sandaconda,NO,NO,NO
 Orthworm,NO,NO,NO
+Cramorant,NO,NO,NO
+Cramorant Gorging Form,NO,NO,NO
+Cramorant Gulping Form,NO,NO,NO
+Goodra Hisuian Form,NO,NO,NO
+Greninja Mega Greninja,NO,NO,NO
+Delphox Mega Delphox,NO,NO,NO
+Staraptor Mega Staraptor,NO,NO,NO
+Sliggoo Hisuian Form,NO,NO,NO
+Maschiff,NO,NO,NO
+Mabosstiff,NO,NO,NO
+Chandelure Mega Chandelure,NO,NO,NO
+Chesnaught Mega Chesnaught,NO,NO,NO
+Bramblin,NO,NO,NO
+Brambleghast,NO,NO,NO
+Arrokuda,YES,NO,NO
+Barraskewda,NO,NO,NO

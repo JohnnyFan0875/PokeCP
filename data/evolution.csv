@@ -82,6 +82,7 @@ Chatot,,
 Cherubi,Cherrim Overcast Form,
 Cherubi,Cherrim Sunshine Form,
 Chespin,Quilladin,Chesnaught
+Chesnaught Mega Chesnaught,,
 Chikorita,Bayleef,Meganium
 Chimchar,Monferno,Infernape
 Chinchou,Lanturn,
@@ -174,6 +175,7 @@ Farfetch'd,,
 Farfetch'd Galarian Form,Sirfetch'd,
 Feebas,Milotic,
 Fennekin,Braixen,Delphox
+Delphox Mega Delphox,,
 Ferroseed,Ferrothorn,
 Finneon,Lumineon,
 Flabebe,Floette,Florges
@@ -183,6 +185,7 @@ Foongus,Amoonguss,
 Frigibax,Arctibax,Baxcalibur
 Frillish,Jellicent,
 Froakie,Frogadier,Greninja
+Greninja Mega Greninja,,
 Fuecoco,Crocalor,Skeledirge
 Furfrou,,
 Garchomp Mega Garchomp,,
@@ -203,6 +206,8 @@ Gligar,Gliscor,
 Goldeen,Seaking,
 Golett,Golurk,
 Goomy,Sliggoo,Goodra
+Sliggoo Hisuian Form,,
+Goodra Hisuian Form,,
 Gothita,Gothorita,Gothitelle
 Greavard,Houndstone,
 Grimer Alolan Form,Muk Alolan Form,
@@ -274,6 +279,7 @@ Lillipup,Herdier,Stoutland
 Litleo,Pyroar,
 Litten,Torracat,Incineroar
 Litwick,Lampent,Chandelure
+Chandelure Mega Chandelure,,
 Lopunny Mega Lopunny,,
 Lotad,Lombre,Ludicolo
 Lugia,,
@@ -362,6 +368,8 @@ Phanpy,Donphan,
 Phantump,Trevenant,
 Pheromosa,,
 Pichu,Pikachu,Raichu
+Raichu Mega Raichu X,,
+Raichu Mega Raichu Y,,
 Pidgeot Mega Pidgeot,,
 Pidgey,Pidgeotto,Pidgeot
 Pidove,Tranquill,Unfezant
@@ -494,7 +502,9 @@ Squirtle,Wartortle,Blastoise
 Stakataka,,
 Stantler,,
 Starly,Staravia,Staraptor
+Staraptor Mega Staraptor,,
 Staryu,Starmie,
+Starmie Mega Starmie,,
 Steelix Mega Steelix,,
 Stufful,Bewear,
 Stunfisk,,
@@ -673,3 +683,9 @@ Blipbug,Dottler,Orbeetle
 Flittle,Espathra,
 Silicobra,Sandaconda,
 Orthworm,,
+Cramorant,,
+Cramorant Gorging Form,,
+Cramorant Gulping Form,,
+Maschiff,Mabosstiff,
+Bramblin,Brambleghast,
+Arrokuda,Barraskewda,
